@@ -1,0 +1,121 @@
+.bodoni{
+    font-family: 'Bodoni MT';
+}
+.text10{
+    font-size: 10px !important;
+}
+.text12{
+    font-size: 12px !important;
+}
+.text14{
+    font-size: 14px !important;
+}
+.text16{
+    font-size: 16px !important;
+}
+.text18{
+    font-size: 18px !important;
+}
+.w-100{
+    width: 100%;
+}
+.look-blue{
+    background-color: #96b4ffff;
+}
+ion-item{
+    --border-color:white !important;
+}
+ion-button{
+    --box-shadow: none !important;
+}
+ion-page{
+    background-color:white !important
+}
+ion-header {
+    background-image: none !important;
+    background: white;
+    /* border-bottom: 1px solid lightgray; */
+}
+.berlin{
+    font-family: 'Berlin Sans FB Demi';
+}
+.berlin-n{
+    font-family: 'Berlin Sans FB';
+}
+.century{
+    font-family: 'Century Gothic';
+}
+.top-div{
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    padding-top: 10px !important;
+    margin-top:50px !important;
+}
+.top-image{
+    margin: auto;
+    max-width: 200px;
+    max-height: 150px;
+}
+.gray{
+    color: gray;
+}
+.header-img{
+    max-height: 30px !important;
+    margin: 10px;
+}
+.button{
+    min-height:60px !important;
+    font-size: 14px;
+    --border-radius: 10px !important;
+    font-style: capitalize;
+}
+.df{
+    display: flex;
+}
+.jcc{
+    justify-content: space-between;
+}
+.jcm{
+    justify-content: center;
+}
+.alm{
+    align-items: center;
+}
+
+.red{
+    background: red;
+}
+.green{
+    background: green;
+}
+.lgray{
+    background-color: lightgray;
+}
+.text-gray{
+    color: gray;
+}
+.vcp__body{
+    min-height: fit-content !important;
+    height: 100% !important;
+}
+.vcp__header-icon{
+    all: unset;
+    display: none !important;
+}
+.action-sheet-group.action-sheet-group-cancel.sc-ion-action-sheet-md {
+    display: none !important;
+}
+.alert-button-role-cancel {
+    color:red !important;
+}
+
+@font-face {
+    font-family: 'Century Gothic';
+    src: url('../../public/assets/font/GOTHIC.TTF');
+}
+
+@font-face {
+    font-family: 'Bodoni MT';
+    src: url('../../public/assets/font/BOD_R.TTF');
+}

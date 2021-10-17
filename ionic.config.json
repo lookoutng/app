@@ -1,0 +1,7 @@
+{
+  "name": "Look Out",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}

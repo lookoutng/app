@@ -1,0 +1,15 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Look Out",
+	"webDir": "dist",
+	"bundledWebRuntime": false,
+	"plugins": {
+		"PushNotifications": {
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		}
+	}
+}
