@@ -1,16 +1,17 @@
 <template>
 <ion-page>
     <ion-content class="ion-padding-bottom">
-        <ion-buttons>
+        <ion-item style="overflow:unset !important;">
             <ion-back-button default-href="/user/question" slot="start"></ion-back-button>
-        </ion-buttons>
+            <ion-button style="max-height:30px !important" v-if="editing" slot="end" @click="update" class="ion-text-capitalize text12" no-padding>
+                Save
+            </ion-button>
+            <Question :editable="answers" slot="end" @edit="editable()" v-else></Question>
+        </ion-item>
 
         <div class="df alm jcm ion-margin-horizontal ion-margin-top ion-padding look-blue" style="min-height:200px;border-radius:5px">
-            <ion-text color="light century ion-stext-center text16 ion-text-wrap">
-                <b>
-                    {{ question.body }}
-                </b>
-            </ion-text>
+            <ion-input v-model="question.body" color="light century text16 ion-text-wrap ion-text-center" id="quest" readonly style="font-style:bold;color:white !important">
+            </ion-input>
         </div>
         <div class="ion-padding-horizontal text12 century ion-text-end" style="margin-top:10px">
             {{ currentDateTime(time) }}
@@ -79,14 +80,19 @@ import {
     IonItem,
     IonText,
     IonBackButton,
+    IonInput,
     modalController
 } from '@ionic/vue'
 import {
-  dismiss,
-    Get, openLoading, openToast
+    dismiss,
+    Get,
+    openLoading,
+    openToast,
+    showError
 } from '../storage'
 import axios from 'axios'
 import moment from 'moment'
+import Question from './Layouts/Question.vue'
 
 export default {
     name: 'SingleQuestion',
@@ -97,20 +103,51 @@ export default {
         IonItem,
         IonText,
         IonBackButton,
+    IonInput,
+        Question
     },
     data() {
         return {
             question: '',
             time: '',
+            editing: '',
             answers: []
         }
     },
     methods: {
-        async openModal(id){
+        editable() {
+            var ion = document.getElementById("quest")
+            ion.readonly = false
+            this.editing = true
+            ion.setFocus()
+        },
+        async update() {
+            openLoading()
+            this.editing = false
+
+            const token = await Get('token')
+            axios.put(this.$hostname + '/api/question/update/' + this.$route.params.id, {
+                    body: this.question.body,
+                }, {
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "Accept": 'application/json'
+                    },
+                })
+                .then((res) => {
+                    openToast(res.data.message)
+                    dismiss()
+                })
+                .catch((error) => {
+                    console.error(error)
+                    dismiss()
+                })
+        },
+        async openModal(id) {
             const modal = await modalController.create({
                 component: Report,
                 componentProps: {
-                        answer_id: id
+                    answer_id: id
                 }
             });
             return modal.present();
@@ -169,8 +206,8 @@ export default {
             })
             .catch((error) => {
                 dismiss()
-                openToast(error.message)
-                console.error(error)
+                showError(error.message)
+                console.log(error)
             })
     }
 };

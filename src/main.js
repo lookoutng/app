@@ -4,6 +4,7 @@ import router from './router';
 
 import { IonicVue } from '@ionic/vue';
 import  './storage.js';
+
 // import VuePlaceAutocomplete from 'vue-place-autocomplete';
 
 /* Core CSS required for Ionic components to work properly */
@@ -18,6 +19,7 @@ import '@ionic/vue/css/typography.css';
 import '@ionic/vue/css/padding.css';
 import '@ionic/vue/css/float-elements.css';
 import '@ionic/vue/css/text-alignment.css';
+import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
@@ -36,8 +38,8 @@ const app = createApp(App)
 app.component('app-header',AppHeader);
 app.component('Footer',Footer);
 app.component('refresh',Refresh);
-// app.config.globalProperties.$hostname = 'https://lookout-ng.herokuapp.com';
-app.config.globalProperties.$hostname = 'http://127.0.0.1:3000';
+app.config.globalProperties.$hostname = 'https://lookout-ng.herokuapp.com';
+// app.config.globalProperties.$hostname = 'http://127.0.0.1:3000';
 
 router.isReady().then(() => {
   app.mount('#app');

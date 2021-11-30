@@ -3,7 +3,7 @@
     <ion-content class="">
         <div class="ion-padding text16 century ion-text-center" style="margin-top:50px !important">
             <ion-text class="ion-margin text-gray">
-               Update Your Profile
+               <b>Update Your Profile</b>
             </ion-text>
         </div>
         <Register></Register>

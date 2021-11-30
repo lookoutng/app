@@ -42,24 +42,18 @@ const routes = [
     name: 'AnsweredQuestion',
     component: AnsweredQuestion
   },
-  
+
   {
     path: '/questions/view',
     name: 'QuestionHistory',
     component: QuestionHistory
   },
-  [
-    {
-      path: '/questions/view',
-      name: 'QuestionHistory',
-      component: QuestionHistory
-    },
-    {
-      path: '/questions/:id',
-      name: 'QuestionHistory',
-      component: QuestionHistory
-    },
-  ],
+
+  {
+    path: '/questions/:id',
+    name: 'QuestionHistory',
+    component: QuestionHistory
+  },
   {
     path: '/user/question',
     name: 'MyQuestion',
@@ -70,7 +64,7 @@ const routes = [
     name: 'SingleQuestion',
     component: SingleQuestion
   },
-  
+
 ]
 
 const router = createRouter({

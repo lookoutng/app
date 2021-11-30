@@ -6,7 +6,7 @@
     <ion-content class="ion-padding-bottom">
         <div class="ion-padding text14 century ion-text-center" style="margin-top:20px !important">
             <ion-text class="ion-margin">
-                "All Question disappear after 24 hours "<b> Luke says..</b>
+                All Question disappear after 24 hours
             </ion-text>
         </div>
 
@@ -50,10 +50,16 @@ import {
     IonList,
     IonItem,
     IonText,
-    IonBadge
+    IonBadge,
+   
 } from '@ionic/vue'
 import axios from 'axios'
-import { dismiss, Get, openLoading, openToast } from '../storage'
+import {
+    dismiss,
+    Get,
+    openLoading,
+    openToast
+} from '../storage'
 
 export default {
     name: 'MyQuestion',
@@ -66,42 +72,41 @@ export default {
         IonHeader,
         IonBadge
     },
-    data(){
-        return{
-            myquestions:[]
+    data() {
+        return {
+            myquestions: []
         }
     },
-    async mounted(){
+    async ionViewDidEnter() {
         openLoading()
         const token = await Get('token')
-        axios.get(this.$hostname + '/api/question/user/default',
-            {
+        axios.get(this.$hostname + '/api/question/user/default', {
                 headers: {
-                    "Authorization" : "Bearer " + token
+                    "Authorization": "Bearer " + token
                 }
             })
             .then((res) => {
                 console.log(res.data.question)
                 this.myquestions = res.data.question
                 dismiss()
-                
+
             })
             .catch((error) => {
                 console.error(error)
                 openToast(error.message)
                 dismiss()
             })
-    }
+    },
+    
 };
 </script>
 
 <style scoped>
-
 .-img {
     padding: 10px;
 }
 
-ion-item{
+ion-item {
     --border-color: #eee !important
 }
 </style>

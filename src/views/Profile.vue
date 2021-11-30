@@ -3,18 +3,18 @@
     <ion-header>
         <app-header title="Profile"></app-header>
     </ion-header>
-    <ion-content class="ion-padding-bottom">
+    <ion-content class="ion-padding-bottom ion-text-center">
         <Register href="/profile"></Register>
         <div class="ion-text-center text-gray text20">
             <br>
             <ion-text color=" bodoni">
-                About
+                <b>About</b>
             </ion-text><br><br>
             <ion-text color=" bodoni ">
-                Support
+                <b>Support</b>
             </ion-text><br><br>
             <ion-text color="danger bodoni" @click="logout">
-                <Icon icon="websybol:logout" :rotate="2" /> Log Out
+                <Icon icon="websybol:logout" :rotate="2" /> <b>Log Out</b>
             </ion-text>
         </div>
     </ion-content>
@@ -43,6 +43,7 @@ import {
     openToast,
     Remove
 } from '../storage';
+import { getAuth, signOut } from "firebase/auth";
 
 export default {
     name: 'Profile',
@@ -57,7 +58,8 @@ export default {
         return {
             username: 'Luke2234',
             email: 'Lukeme@luke.com',
-            dp: '/img/Doctor.png'
+            dp: '/img/Doctor.png',
+            number: '333'
         }
     },
     methods: {
@@ -74,6 +76,7 @@ export default {
                 });
             await alert.present();
 
+            
             const role = await alert.onDidDismiss();
             console.log('onDidDismiss resolved with role', role);
 
@@ -98,10 +101,18 @@ export default {
                         openToast(error.message)
                         dismiss()
                     })
+
+                const auth = getAuth();
+            signOut(auth).then(() => {
+            // Sign-out successful.
+            }).catch((error) => {
+                console.log(error.message)
+            // An error happened.
+            });
             }
-        }
-    }
-};
+        },
+    },
+  };
 </script>
 
 <style scoped>

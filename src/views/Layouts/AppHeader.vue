@@ -9,9 +9,7 @@
         </ion-button>
     </ion-buttons>
     <ion-title class="century text16">
-        <b>
             {{ title }}
-        </b>
     </ion-title>
     <ion-buttons slot="end">
         <ion-button class="icon-only ion-no-padding" no-padding>

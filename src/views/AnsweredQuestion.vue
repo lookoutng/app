@@ -14,7 +14,7 @@
     </ion-tab-bar>
     <ion-content class="ion-padding-bottom">
 
-        <div class="ion-text-center bodoni ion-padding ion-margin-hor" style="margin-top:20vh;color:#bbb" v-if="!answered">
+        <div class="ion-text-center bodoni ion-padding ion-margin-hor" style="margin-top:20vh;color:#bbb" v-if="!answered[0]">
             <h3>
                 <b>
                     No Question Answered Yet
@@ -150,7 +150,7 @@ export default {
                 })
         },
     },
-    async created() {
+    async ionViewDidEnter() {
         openLoading()
         const token = await Get('token')
         const coordinates = await Geolocation.getCurrentPosition();

@@ -1,188 +1,170 @@
 <template>
-<div id="menu" class="row">
-    <ul class="menu">
-        <li class="menu__item">
-            <a class="menu__link" href="#">Home</a>
-        </li>
-
-        <li class="menu__item menu__item--dropdown" v-on:click="toggle('ranking')" v-bind:class="{'open' : dropDowns.ranking.open}">
-            <a class="menu__link menu__link--toggle" href="#">
-                <span>Rangliste</span>
-                <i class="menu__icon fa fa-angle-down"></i>
-            </a>
-
-            <ul class="dropdown-menu">
-                <li class="dropdown-menu__item" style="color:red;">
-                    Delete
-                </li>
-
-                <li class="dropdown-menu__item">
-                    Edit
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu__item">
-            <a class="menu__link" href="#">Belegungskalender</a>
-        </li>
-    </ul>
+<div>
+    <div class="dropdown">
+        <ion-button class="dropbtn">
+            <Icon icon="mdi:dots-vertical" class="ignore" @click="toggle()" />
+        </ion-button>
+        <div id="myDropdown" class="dropdown-content  bodoni text14">
+            <ion-text class="ignore" @click="edit" v-if="!editable[0]">
+                Edit
+            </ion-text>
+            <ion-text class="ignore" color="danger" @click="deleteAns()">
+                Delete
+            </ion-text>
+        </div>
+    </div>
 
 </div>
 </template>
 
 <script>
 import {
-    IonList,
-    IonItem,
-    IonText,
-    IonButton,
-    IonInput,
-    IonSelect,
-    IonSelectOption,
+    alertController
 } from '@ionic/vue'
 import {
-    VueCollapsiblePanelGroup,
-    VueCollapsiblePanel,
-} from '@dafcoe/vue-collapsible-panel'
-import {
     Get,
+    dismiss,
+    openToast,
+    showError
 } from '../../storage'
 import axios from 'axios'
+import {
+    Icon
+} from '@iconify/vue'
 
 export default {
     name: 'QuestionHistory',
-    props: ['questions', 'default'],
+    props:['editable'],
     components: {
-        IonList,
-        IonItem,
-        IonText,
-        IonButton,
-        IonInput,
-        IonSelect,
-        IonSelectOption,
-        VueCollapsiblePanelGroup,
-        VueCollapsiblePanel,
+        Icon
     },
-    props:['id','answered'],
     data() {
-        return {
-            // questions: [],
-            dropDowns: {
-                ranking: {
-                    open: false
-                }
-            }
-        }
+        return {}
     },
     methods: {
-        delete($id){
-            axios.delete(this.$hostname + '/api/answer/delete/' + $id, {
-                headers: {
-                    "Authorization": 'Bearer ' + token,
-                    "Accept": 'application/json'
-                },
-            })
-            .then((res) => {
-                openToast('Answer deleted')
-                dismiss()
-            })
-            .catch((error) => {
-                console.log(error)
-                showError(error)
-                dismiss()
-            })
-        },
-        update(){
+        edit(){
+            this.$emit('edit')
+            setTimeout(this.toggle(),2000)
 
-        }
-    },
-    async mounted() {
-        var self = this
-        window.addEventListener('click', function (e) {
-            if (!e.target.parentNode.classList.contains('menu__link--toggle')) {
-                self.close()
+        },
+        async deleteAns() {
+            this.toggle()
+            const alert = await alertController
+                .create({
+                    cssClass: 'alert bodoni text12',
+                    message: 'The Action is destructive',
+                    buttons: [{
+                        text: 'Ok',
+                        role: 'OK'
+                    }, 'Cancel'],
+                    backdropDismiss: true,
+                });
+            await alert.present();
+
+            const role = await alert.onDidDismiss();
+            console.log('onDidDismiss resolved with role', role);
+
+            if (role.role == "OK") {
+
+                const token = await Get('token')
+                axios.delete(this.$hostname + '/api/question/delete/' + this.$route.params.id, {
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "Accept": 'application/json'
+                        },
+                    })
+                    .then((res) => {
+                        openToast(res.data.message)
+                        dismiss()
+                        setTimeout(function(){
+                            location.replace("/user/question")
+                        },2000)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        showError(error)
+                        dismiss()
+                    })
             }
-        }, false)
-        if (this.default) {
-            open(this.default)
-            location.href = "#question" + this.default
+        },
+        toggle() {
+            document.getElementById("myDropdown").classList.toggle("show");
         }
     },
     setup() {
 
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn') && !event.target.matches('.ignore')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
     }
 };
 </script>
 
 <style scoped>
-body {
-    margin: 2rem 0;
+/* Dropdown Button */
+.dropbtn {
+    --background: white !important;
+    --padding-end: 3px !important;
+    --padding-start: 3px !important;
+    color: black;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
 }
 
-ul {
-    list-style: none;
+/* Dropdown button on hover & focus */
+.dropbtn:hover,
+.dropbtn:focus {
+    --background: white !important;
 }
 
-.menu {
-    display: flex;
-
-    &__item {
-        position: relative;
-        padding-right: 3rem;
-
-        &--dropdown {}
-    }
-
-    &__link {
-        //color: $menu_link_color;
-        text-transform: uppercase;
-
-        &:hover {
-            //color: $menu_link_hover_color;
-        }
-
-        &--toggle {}
-    }
-
-    &__icon {
-        margin: 0 !important;
-    }
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
 }
 
-.open .dropdown-menu {
-    display: block;
-}
-
-.dropdown-menu {
-    font-size: 0.9rem;
-    position: absolute;
-    min-width: 130px;
-    top: 2.2rem;
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
     display: none;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    right: 0;
+    background-color: white;
     border-radius: 4px;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
 }
 
-.dropdown-menu__item:first-child .dropdown-menu__link {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-.dropdown-menu__item:last-child .dropdown-menu__link {
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-}
-
-.dropdown-menu__link {
+/* Links inside the dropdown */
+.dropdown-content ion-text {
+    padding: 12px 16px;
+    text-decoration: none;
     display: block;
+}
 
-    padding: 1rem;
-    color: blue;
-    background-color: #fafafa;
+.dropdown-content ion-text:hover,
+.dropdown-content ion-text:active {
+    background: lightgray;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
 
-    &:hover {
-        color: green;
-        background-color: #ccc;
-    }
+/* Change color of dropdown links on hover */
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+    display: block;
 }
 </style>

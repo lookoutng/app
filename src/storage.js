@@ -29,24 +29,25 @@ export async function isLoggedIn() {
   console.log(val)
 }
 
-export async function openLoading(timeout = 200000) {
+export async function openLoading(timeout = 60000) {
   loading = await loadingController
     .create({
       cssClass: 'century loading text-12',
       message: 'Loading...',
-      backdropDismiss: true,
+      backdropDismiss: false,
       duration: timeout,
     });
 
   setTimeout(function () {
     loading.dismiss()
+    // openToast("Unknown Error Ocurred")
   }, timeout);
   await loading.present();
 
   return loading
 }
 
-export async function openToast(message, timeout = 2000) {
+export async function openToast(message, timeout = 5000) {
   toast = await toastController
     .create({
       message: message,
@@ -57,18 +58,19 @@ export async function openToast(message, timeout = 2000) {
 
 export function showError(error) {
 
-  if (error.response) {
-    if (error.response.status < 400)
-      openToast(error.response.data.message)
+  // if (error.response) {
+  //   if (error.response.status < 400)
+  //     openToast(error.response.data.message)
 
-  }
-  else if (error.request) {
-    openToast("Network Error")
+  // }
+  // else if (error.request) {
+  //   openToast("Network Error")
 
-  }
-  else {
-    openToast("Unknown error occured")
-  }
+  // }
+  // else {
+  //   openToast("Unknown error occured")
+  // }
+  openToast(error);
 
 }
 
@@ -77,6 +79,7 @@ export function storeUser(res) {
   Store('dp', res.data.user.dp)
   Store('name', res.data.user.username)
   Store('email', res.data.user.email)
+  Store('tel', res.data.user.tel)
 }
 
 export function reload(){
@@ -84,6 +87,7 @@ export function reload(){
     location.replace(window.location)
   })
 }
+
 export async function dismiss() {
   loading.dismiss()
 }

@@ -21,13 +21,13 @@
         </div>-->
 
         <ion-item class="no-line ion-margin-top century" style="overflow:unset !important">
-            <ion-range min="2" max="100" v-model="range" step="2" style="" pin="true" @ionChange="ranged()">
-                <ion-label slot="start">2km</ion-label>
-                <ion-label slot="end">100km</ion-label>
+            <ion-range min="1" max="30" v-model="range" step="1" style="" pin="true" @ionBlur="getRanged">
+                <ion-label slot="start">km</ion-label>
+                <ion-label slot="end">30km</ion-label>
             </ion-range>
         </ion-item>
 
-        <div class="ion-text-center bodoni ion-padding ion-margin-hor" style="margin-top:20vh;color:#bbb" v-if="!questions">
+        <div class="ion-text-center bodoni ion-padding ion-margin-hor" style="margin-top:12vh;color:#bbb" v-if="!questions[0]">
             <h3>
                 <b>
                     No Question Found for the Selected Range
@@ -133,7 +133,8 @@ export default {
     data() {
         return {
             questions: [],
-            range: 30,
+            range: 3,
+
         }
     },
     methods: {
@@ -147,7 +148,6 @@ export default {
 
             console.log(this.range)
         },
-
         async send($question_id) {
             const token = await Get('token')
 
@@ -171,9 +171,12 @@ export default {
                     console.error(error)
                 })
         },
-        async ranged() {
+        async getRanged(){
+            openLoading()
+
             const token = await Get('token')
             const coordinates = await Geolocation.getCurrentPosition();
+            
             const lat = coordinates.coords.latitude
             const long = coordinates.coords.longitude
 
@@ -202,11 +205,13 @@ export default {
             console.log(this.range)
         }
     },
-    async created() {
+    async ionViewDidEnter() {
         openLoading()
+
+     
         const token = await Get('token')
         const coordinates = await Geolocation.getCurrentPosition();
-
+        
         const lat = coordinates.coords.latitude
         const long = coordinates.coords.longitude
 
@@ -217,7 +222,8 @@ export default {
                 },
                 params: {
                     lat: lat,
-                    long: long
+                    long: long,
+                    range: this.range
                 }
             })
             .then((res) => {
@@ -230,15 +236,6 @@ export default {
                 showError(error)
                 dismiss()
             })
-    },
-     ionPageDidLoad() {
-    console.log("I'm alive!");
-  },
-    async mounted() {
-        if (this.default) {
-            open(this.default)
-            location.href = "#question" + this.default
-        }
     },
     setup() {
 

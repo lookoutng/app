@@ -1,11 +1,15 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "Look Out",
-	"webDir": "dist",
-	"bundledWebRuntime": false,
-	"plugins": {
-		"PushNotifications": {
-		  "presentationOptions": ["badge", "sound", "alert"]
-		}
-	  }
+  "appId": "com.look.out",
+  "appName": "lookout",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "FirebaseAuthentication": {
+      "skipNativeAuth": false,
+      "providers": ["phone"]
+    },
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
 }

@@ -7,11 +7,15 @@
 <script>
 import {
     IonApp,
-    IonRouterOutlet
+    IonRouterOutlet,
+     onIonViewWillEnter,
+    onIonViewDidEnter,
+    onIonViewWillLeave,
+    onIonViewDidLeave
 } from '@ionic/vue';
 import {
     isLoggedIn,
-    Store,
+    storeUser,
     Get,
     openToast
 } from './storage'
@@ -26,6 +30,7 @@ import {
 //     setnotifications
 //     // ActionPerformed
 // } from '@capacitor/push-notifications';
+
 export default {
     name: 'App',
     components: {
@@ -38,7 +43,7 @@ export default {
         this.$refreshing = ""
         isLoggedIn()
         const token = await Get('token')
-
+        // const token = 0
         if (token) {
             const coordinates = await Geolocation.getCurrentPosition();
             console.log('Current position:', coordinates.coords.latitude);
@@ -62,7 +67,7 @@ export default {
                             location.replace("/home")
                         })
                     }
-                    console.error(error)
+                    console.log(error)
                 })
                 axios.get(this.$hostname + '/api/user', {
                 headers: {
@@ -71,10 +76,7 @@ export default {
             })
             .then((res) => {
                 this.points = res.data.user.points
-                Store('points', res.data.user.points)
-                Store('dp', res.data.user.dp)
-                Store('name', res.data.user.username)
-                Store('email', res.data.user.email)
+                storeUser(res)
             })
             .catch((error) => {
                 console.log(error)
@@ -85,14 +87,14 @@ export default {
 
         // PushNotifications.addListener('registration',
         //     (token) => {
-        //         console.log('Push registration success' + token);
+        //         window.alert('Push registration success' + token);
         //     }
         // );
 
         // // Some issue with our setup and push will not work
         // PushNotifications.addListener('registrationError',
         //     (error) => {
-        //         alert('Error on registration: ' + JSON.stringify(error));
+        //         window.alert('Error on registration: ' + JSON.stringify(error));
         //     }
         // );
 
@@ -103,6 +105,19 @@ export default {
         //     }
         // );
 
+    },
+    setup() {
+        onIonViewDidEnter(() => {
+        });
+
+        onIonViewDidLeave(() => {
+        });
+
+        onIonViewWillEnter(() => {
+        });
+
+        onIonViewWillLeave(() => {
+        });
     }
 }
 </script>

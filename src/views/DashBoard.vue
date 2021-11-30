@@ -6,24 +6,14 @@
     <ion-content class="ion-padding">
         <refresh></refresh>
         <div class="ion-padding text14 century ion-text-center" style="">
-            <ion-text class="ion-margin-horizontal" v-if="points >= 30">
-                <b>
-                    Luke
-                </b>
-                <i>
-
-                </i>is Ready to Answer your Question
-
+            <ion-text class="ion-margin-horizontal text14"  v-if="points >= 30">
+                <b>Ask a New Question</b>
             </ion-text>
 
-            <ion-text class="ion-margin-horizontal" v-if="points < 30">
+            <ion-text class="ion-margin-horizontal" color="danger" v-if="points < 30">
                 <b>
-                    Luke says
+                    Not enough points !!!
                 </b>
-                <i>
-
-                </i>Not enough points
-
             </ion-text>
         </div>
 
@@ -41,14 +31,16 @@
             </ion-item>
             <locate></locate>
 
-            <div class="ion-padding ion-margin-top ion-text-center">
-                <ion-textarea position="foating" class="century ion-text-center lgray" v-model="body" placeholder="Your Question..." required></ion-textarea>
+            <div class="">
+                <ion-item>
+                    <ion-textarea class="century df alm" v-model="body" placeholder="Your Question..."  required></ion-textarea>
+                </ion-item>
                 <br>
 
                 <div class="" v-if="type == 'M'">
                     <ion-list class="">
                         <ion-item v-for="(entry, index) in options" :key="entry.key" class="century text12">
-                            <ion-input type="text" v-model="entry.value"></ion-input>
+                            <ion-input type="text" v-model="entry.body"></ion-input>
                             <ion-checkbox slot="start" disabled>
                             </ion-checkbox>
                             <Icon icon="iconoir:cancel" class="text16" style="color:gray" slot="end" @click="Remove(index)" />
@@ -63,13 +55,14 @@
                 </div>
 
                 <ion-button expand="block" style="width:100%" class="ion-text-capitalize bodoni text18" type="submit">
-                    <b>
                         Ask Question
-                    </b>
                 </ion-button>
 
             </div>
         </form>
+
+        <!-- FORM FOR INAVAILABLE POINTS -->
+
 
         <form v-if="points < 30">
             <ion-item class="ion-margin-top" disabled>
@@ -91,10 +84,8 @@
                 </ion-item>
                 <br>
 
-                <ion-button expand="block" style="width:100%" class="ion-text-capitalize bodoni text18" type="submit" disabled>
-                    <b>
+                <ion-button expand="" style="width:100%" class="ion-text-capitalize bodoni text12" type="submit" disabled>
                         Ask Question
-                    </b>
                 </ion-button>
 
             </div>
@@ -133,7 +124,6 @@ import {
     showError
 } from '../storage';
 import axios from 'axios';
-
 export default {
     name: 'QuestionHistory',
     components: {
@@ -179,12 +169,18 @@ export default {
                     this.options.splice(id, 1)
             }
         },
-        dismiss() {
+        rel() {
             this.body = ''
             this.location = ''
             this.type = 'S'
+            this.options = [{
+                    body: 'yes'
+                },
+                {
+                    body: 'no'
+                },
+            ]
         },
-
         async createQuestion() {
             openLoading()
             const coordinates = await Geolocation.getCurrentPosition();
@@ -210,14 +206,15 @@ export default {
                 .then((res) => {
                     console.log(res)
                     openToast('Question posted successfully')
-                })  
+                    this.rel()
+                    dismiss()
+                })
                 .catch((error) => {
                     showError(error)
                     success = false
                 })
 
             if (success) {
-                dismiss()
                 setTimeout(function () {
                     location.replace("/dashboard")
                 }, 3000);
@@ -283,18 +280,20 @@ ion-checkbox {
 }
 
 ion-textarea {
-    min-width: 200px;
-    min-height: 200px;
-    --padding-top: 85px;
-    --placeholder-font-weight: 100;
-    border-radius: 7px !important;
-
+    width: 100%;
+    min-height: 150px;
+    background-color:none;
 }
-
+textarea {
+    min-height: 200px !important;
+    
+}
 .ion-no-padding {
     --padding-bottom: 0px !important;
     --padding-top: 0px !important;
     --padding-start: 0px !important;
     --padding-end: 0px !important;
 }
+
+
 </style>

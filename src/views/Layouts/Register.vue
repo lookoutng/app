@@ -1,22 +1,21 @@
 <template>
 <form class="ion-padding ion-text-center" style="margin-top:7vh" @submit.prevent="update">
     <div class=" df jcm">
-        <label id="label" for="dp" :style=" image ? 'background-image:url('+ image + ');' :'background-image:url('+ this.$hostname + '/images/' + this.dp +  ');'" class="profile df alm jcm">
+        <label id="label" for="dp" :style=" image ? 'background-image:url('+ image + ');' :'background-image:url('+ this.$hostname + '/images/' + this.dp +  ');background-repeat:no-repeat;'" class="profile df alm jcm">
             <Icon icon="carbon:add-filled" class="ion-no-margin ion-no-padding" style="color:#3880ff;position:absolute;background:white;border-radius:100%;padding:0px;min-width:50px;min-height:50px;right:0;top:10%" />
             <ion-text v-if="!image && !dp" class="century text16">
-                Profile Picture
+                <b>Profile Picture</b>
             </ion-text>
         </label>
     </div>
 
     <!-- <ion-spinner class="ion-wrapper-overlay" role="modal"></ion-spinner> -->
-    <input id="dp" accept="images/*" class="ion-hide button century ion-margin-top" type="file" placeholder="Username" @change="preview" />
-    <ion-input class="button century ion-margin-top" v-model="username" placeholder="Username" required></ion-input>
-    <ion-input class="button century ion-margin-top" v-model="email" type="email" placeholder="Example@gmail.com" required></ion-input>
-    <ion-button expand="block bodoni ion-text-capitalize text16 ion-margin-top" type="submit">
-        <b>
+    <input id="dp" accept="image/png, image/gif, image/jpeg" class="ion-hide button century ion-margin-top" type="file" placeholder="Username" @change="preview" />
+    <ion-input class="button century ion-margin-top" :value="tel" disabled></ion-input>
+    <ion-input class="button century ion-margin-top" v-model="username" placeholder="Username" @keyup="checkChanges" required="true"></ion-input>
+    <ion-input class="button century ion-margin-top" v-model="email" type="email" placeholder="Example@gmail.com" @keyup="checkChanges" required="true"></ion-input>
+    <ion-button expand="block bodoni ion-text-capitalize text16 ion-margin-top" type="submit" id="ProfileUpdate"  disabled>
             Update
-        </b>
     </ion-button>
 </form>
 </template>
@@ -35,7 +34,8 @@ import {
     Store,
     openLoading,
     dismiss,
-    showError
+    showError,
+    openToast
 } from '../../storage'
 import axios from 'axios'
 
@@ -55,11 +55,28 @@ export default {
             username: '',
             Ousername: '',
             dp: '',
-            image:''
+            image:'',
+            tel:''
         }
     },
     methods: {
+         async getNumber(){
+            const tel = await Get('tel')
+                this.number = tel
+
+            return tel;
+        },
+        Ihaveedited(){
+                document.getElementById('ProfileUpdate').disabled = false
+        },
+        checkChanges(){
+            if (this.Oemail != this.email || this.Ousername != this.username || this.$route.name == "Reg")
+                document.getElementById('ProfileUpdate').disabled = false
+            else
+                document.getElementById('ProfileUpdate').disabled = true
+        },
         preview() {
+            this.Ihaveedited()
             var imagefile = document.querySelector('#dp');
             var label = document.querySelector('#label');
             this.image = URL.createObjectURL(imagefile.files[0])
@@ -78,8 +95,11 @@ export default {
                 .then((res) => {
                     Store('points', res.data.user.points)
                     Store('dp', res.data.user.dp)
+                    this.checkChanges()
+                    
                     Store('name', res.data.user.username)
                     Store('email', res.data.user.email)
+                    openToast(res.data.message)
 
                     if(this.$route.name == "Reg")
                         location.replace('/dashboard')
@@ -112,6 +132,7 @@ export default {
         }
     },
     async mounted() {
+        this.checkChanges()
         openLoading()
         const token = await Get('token')
         axios.get(this.$hostname + '/api/user', {
@@ -126,6 +147,7 @@ export default {
                 this.Oemail = res.data.user.email
                 this.Ousername = res.data.user.username
                 this.dp = res.data.user.dp
+                this.tel = res.data.user.tel
 
                 Store('points', res.data.user.points)
                 Store('dp', res.data.user.dp)
@@ -156,8 +178,9 @@ export default {
     width: min-content;
     border-radius: 100%;
     border-radius: 100%;
-    background-size: contain !important;
+    background-size: cover !important;
     padding: 0px;
     box-shadow: lightgray 0px 1px 5px 2px;
+    background-repeat:no-repeat !important;
 }
 </style>
