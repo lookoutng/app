@@ -1,32 +1,35 @@
 <template>
 <ion-page>
     <ion-content class="">
-        <swiper :slides-per-view="3" :space-between="50" @swiper="onSwiper" @slideChange="onSlideChange">
+        <!--<swiper :slides-per-view="3" :space-between="50" @swiper="onSwiper" @slideChange="onSlideChange">
             <swiper-slide>Slide 1</swiper-slide>
             <swiper-slide>Slide 2</swiper-slide>
             <swiper-slide>Slide 3</swiper-slide>
             ...
-        </swiper>
+        </swiper>-->
         <div class="ion-text-center ion-margin-top ion-padding-top">
             <br>
-            <img src="/img/LookOut.png" class="img">
+            <img src="/img/logo.png" class="img">
         </div>
-        <div class="ion-padding text14 century ion-text-center" style="margin-top:20px !important">
+        <div class="ion-padding text14 head ion-text-center" style="margin-top:x !important">
 
-            <ion-text class="ion-text-center">
-                Input your mobile number to get the verification code.
-            </ion-text>
+                <h1 style="font-size:40px">
+                    <b>
+                        Welcome
+                    </b>
+                </h1>
+                
         </div>
-        <form class="ion-padding" style="margin-top:10vh" @submit.prevent="login">
+        <form class="ion-padding pg" style="margin-top:10vh" @submit.prevent="login">
             <ion-item class="ion-no-padding">
                 <country-code style="max-width:90px" ref="code" @click="getCountryCode"></country-code>
-                <ion-input class="button century" placeholder="09011223344" v-model="tel" minLength="11" maxLength="11" inputmode="numeric" required="true"></ion-input>
+                <ion-input class="button" placeholder="09011223344" v-model="tel" minLength="11" maxLength="11" inputmode="numeric" required="true"></ion-input>
             </ion-item>
             <br>
             <ion-button type="submit" class="ion-margin-top bodoni ion-text-capitalize text14" expand="block" id="">
                 Send Verfication
             </ion-button>
-            <div class="ion-hide" id="recaptcha">
+            <div class="ion-hide head" id="recaptcha">
 
             </div>
         </form>
@@ -39,7 +42,6 @@ import {
     IonContent,
     IonPage,
     IonButton,
-    IonText,
     IonInput,
     modalController
 } from '@ionic/vue'
@@ -49,7 +51,6 @@ import {
     Get,
     openToast,
     openLoading,
-    // dismiss
 } from "../storage";
 // import {
 //     Swiper,
@@ -70,7 +71,6 @@ export default {
         IonContent,
         IonPage,
         IonButton,
-        IonText,
         IonInput,
         CountryCode,
         // Swiper,
@@ -84,6 +84,27 @@ export default {
     methods: {
         getCountryCode() {
             console.log(CountryCode.data().current + this.tel.substring(1))
+        },
+        firebaseLogin(){
+            const auth = getAuth();
+            const phoneNumber = CountryCode.data().current + this.tel.substring(1);
+            
+            signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+            .then((confirmationResult) => {
+
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+                window.confirmationResult = confirmationResult;
+                console.log('success')
+                this.createModal()
+                // ...
+            }).catch((error) => {
+                // window.recaptchaVerifier.recaptcha.reset()
+                console.log(error)
+                openToast("SMS not sent, try confirm the number and your network")
+                // Error; SMS not sent
+                // ...
+            });
         },
         async login() {
             openLoading()
@@ -101,34 +122,19 @@ export default {
 
             })
 
-            const auth = getAuth();
-            // if (!window.recaptchaVerifier) {
-            window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
-                'size': 'invisible',
-                'callback': () => {
-
-                }
-            }, auth);
-            // }
-
-            const phoneNumber = CountryCode.data().current + this.tel.substring(1);
-            const appVerifier = window.recaptchaVerifier;
-
-            signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-                .then((confirmationResult) => {
-                    // SMS sent. Prompt user to type the code from the message, then sign the
-                    // user in with confirmationResult.confirm(code).
-                    window.confirmationResult = confirmationResult;
-                    console.log('success')
-                    this.createModal()
-                    // ...
-                }).catch((error) => {
-                    console.log(error)
-                    openToast("SMS not sent, try confirm the number and your network")
-                    // Error; SMS not sent
-                    // ...
-                });
-
+           
+            if(window.recaptchaVerifier){
+                this.firebaseLogin()
+            }
+            else{
+                window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
+                    size: 'invisible',
+                    callback: () => {
+                        console.log("geer")
+                    }
+                }, getAuth());
+                window.recaptchaVerifier.callback = this.firebaseLogin() 
+            }
         },
         async createModal() {
             const modal = await modalController.create({
@@ -167,8 +173,7 @@ export default {
 
 <style scoped>
 .img {
-    max-width: 150px;
-    max-height: 100px;
+    max-height: 170px;
     background: white !important;
 
 }

@@ -4,7 +4,7 @@
         <app-header title="Recent Question"></app-header>
     </ion-header>
 
-    <ion-tab-bar class="ion-margin ion-border">
+    <ion-tab-bar class="ion-margin ion-border pg">
         <ion-tab-button tab="answered" class="" href="/questions/view">
             Recent
         </ion-tab-button>
@@ -14,7 +14,7 @@
     </ion-tab-bar>
     <ion-content class="ion-padding-bottom">
 
-        <div class="ion-text-center bodoni ion-padding ion-margin-hor" style="margin-top:20vh;color:#bbb" v-if="!answered[0]">
+        <div class="ion-text-center bodoni ion-padding head" style="margin-top:20vh;color:#bbb" v-if="!answered[0]">
             <h3>
                 <b>
                     No Question Answered Yet
@@ -22,7 +22,7 @@
             </h3>
         </div>
 
-        <ion-list lines="full">
+        <ion-list lines="full" class="bg">
             <vue-collapsible-panel-group accordion>
                 <vue-collapsible-panel v-for="q in answered" :key="q.id" :expanded="false" class="">
                     <template #title>

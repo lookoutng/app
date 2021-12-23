@@ -5,9 +5,9 @@
             <Icon icon="iconoir:cancel" class="ion-float-start" style="font-size:30px !important" /><br>
         </ion-text>
     </div>
-    <div class="ion-padding-vertical ion-padding-start text16 century " style="margin-top:20px !important">
-        <ion-text class="">
-            A Verification code has been sent to {{tel}} , expires in 10 minutes.
+    <div class="ion-padding-vertical ion-padding-start text14 century " style="margin-top:20px !important">
+        <ion-text class="ion-text-center">
+            A Verification code has been sent to {{ tel }} , expires in 10 minutes.
         </ion-text>
     </div>
     <br>
@@ -15,7 +15,7 @@
             <ion-item>
                 <ion-input type="text" v-model="code" minLength="6" maxLength="6" class="century  text14" placeholder="Security Code"></ion-input>
             </ion-item>
-            <ion-button class="bodoni ion-text-capitalize ion-margin-top" expand="block" style="max-width:300px" type="submit">
+            <ion-button class="bodoni ion-text-capitalize ion-margin-top" expand="block" type="submit">
                     Verify
             </ion-button>
     </form>
@@ -67,10 +67,7 @@ export default {
                 })
                 .catch((error) => {
                     showError(error)
-                                    })
-            // .then((error) => function(){
-            //       openToast(error.response.data.message)
-            // })
+                    })
         },
         verify() {
             const code = this.code;
@@ -84,14 +81,18 @@ export default {
             }).catch((error) => {
                 console.log(error)
                 openToast("User couldn't sign in (bad verification code?)")
+
+                
                 // User couldn't sign in (bad verification code?)
                 // ...
             });
+            
         }
     },
     setup() {
         const closeModal = function () {
             modalController.dismiss();
+
         };
 
         return {

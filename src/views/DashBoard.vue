@@ -5,7 +5,7 @@
     </ion-header>
     <ion-content class="ion-padding">
         <refresh></refresh>
-        <div class="ion-padding text14 century ion-text-center" style="">
+        <div class="ion-padding text14 head ion-text-center" style="">
             <ion-text class="ion-margin-horizontal text14"  v-if="points >= 30">
                 <b>Ask a New Question</b>
             </ion-text>
@@ -17,9 +17,9 @@
             </ion-text>
         </div>
 
-        <form @submit.prevent="createQuestion()" v-if="points >= 30">
+        <form @submit.prevent="createQuestion()" class="pg" v-if="points >= 30">
             <ion-item class="ion-margin-top">
-                <ion-select class="text14 century" v-model="type" interface="popover" no-lines required>
+                <ion-select class="text14" v-model="type" interface="popover" no-lines required>
                     <ion-select-option value="N">Number</ion-select-option>
                     <ion-select-option value="M">MultiChoice</ion-select-option>
                     <ion-select-option value="S">Short text</ion-select-option>
@@ -27,13 +27,13 @@
             </ion-item>
             <ion-item>
                 <Icon icon="bx:bx-current-location" slot="end" style="color:blue" />
-                <ion-input class="century text14" v-model="location" placeholder="Target Location" required></ion-input>
+                <ion-input class="text14" v-model="location" placeholder="Target Location" required></ion-input>
             </ion-item>
             <locate></locate>
 
             <div class="">
                 <ion-item>
-                    <ion-textarea class="century df alm" v-model="body" placeholder="Your Question..."  required></ion-textarea>
+                    <ion-textarea class="df alm" v-model="body" placeholder="Your Question..."  required></ion-textarea>
                 </ion-item>
                 <br>
 
@@ -46,7 +46,7 @@
                             <Icon icon="iconoir:cancel" class="text16" style="color:gray" slot="end" @click="Remove(index)" />
                         </ion-item>
 
-                        <ion-item class="century text12" @keypress.enter="save()">
+                        <ion-item class="text12" @keypress.enter="save()">
                             <ion-input type="text" v-model="addOption" placeholder="Add Option"></ion-input>
                             <ion-checkbox slot="start">
                             </ion-checkbox>
@@ -54,7 +54,7 @@
                     </ion-list>
                 </div>
 
-                <ion-button expand="block" style="width:100%" class="ion-text-capitalize bodoni text18" type="submit">
+                <ion-button expand="block" style="width:100%" class="head ion-text-capitalize bodoni text14" type="submit">
                         Ask Question
                 </ion-button>
 
@@ -64,9 +64,9 @@
         <!-- FORM FOR INAVAILABLE POINTS -->
 
 
-        <form v-if="points < 30">
+        <form v-if="points < 30" class="pg">
             <ion-item class="ion-margin-top" disabled>
-                <ion-select class="text14 century" v-model="type" interface="popover" no-lines disabled>
+                <ion-select class="text14" v-model="type" interface="popover" no-lines disabled>
                     <ion-select-option value="N">Number</ion-select-option>
                     <ion-select-option value="M">MultiChoice</ion-select-option>
                     <ion-select-option value="S">Short text</ion-select-option>
@@ -74,17 +74,17 @@
             </ion-item>
             <ion-item disabled>
                 <Icon icon="bx:bx-current-location" slot="end" style="color:blue" />
-                <ion-input class="century text14" placeholder="Target Location"></ion-input>
+                <ion-input class="text14" placeholder="Target Location"></ion-input>
             </ion-item>
             <locate></locate>
 
             <div class="ion-padding ion-margin-top ion-text-center">
                 <ion-item class="ion-no-padding ion-text-center" disabled no-padding>
-                    <ion-textarea class="century ion-text-center lgray" placeholder="Your Question..." required></ion-textarea>
+                    <ion-textarea class="ion-text-center lgray" placeholder="Your Question..." required></ion-textarea>
                 </ion-item>
                 <br>
 
-                <ion-button expand="" style="width:100%" class="ion-text-capitalize bodoni text12" type="submit" disabled>
+                <ion-button expand="" style="width:100%" class="head ion-text-capitalize text14" type="submit" disabled>
                         Ask Question
                 </ion-button>
 

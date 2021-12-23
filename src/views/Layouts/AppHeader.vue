@@ -8,13 +8,15 @@
             </ion-thumbnail>
         </ion-button>
     </ion-buttons>
-    <ion-title class="century text16">
-            {{ title }}
+    <ion-title class="head text16">
+            <b>
+                {{ title }}
+            </b>
     </ion-title>
     <ion-buttons slot="end">
         <ion-button class="icon-only ion-no-padding" no-padding>
             <img src="/img/star.png" class="header-img">
-            <ion-text class="century text14" style="">
+            <ion-text class="head text14" style="">
                 <b>
                     {{ points }}
                 </b>

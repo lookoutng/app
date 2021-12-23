@@ -4,7 +4,7 @@
         <app-header title="Recent Question"></app-header>
 
     </ion-header>
-    <ion-tab-bar class="ion-margin ion-border" slot="top">
+    <ion-tab-bar class="ion-margin pg ion-border" slot="top">
         <ion-tab-button tab="answered" class="" href="/questions/view">
             Recent
         </ion-tab-button>
@@ -14,12 +14,6 @@
     </ion-tab-bar>
     <ion-content class="ion-padding-bottom">
 
-        <!-- <div class="ion-padding text14 century ion-text-center" style="margin-top:30px !important">
-            <ion-text class="ion-margin">
-                "Here are new Question you might be able to answer" Luke....
-            </ion-text>
-        </div>-->
-
         <ion-item class="no-line ion-margin-top century" style="overflow:unset !important">
             <ion-range min="1" max="30" v-model="range" step="1" style="" pin="true" @ionBlur="getRanged">
                 <ion-label slot="start">km</ion-label>
@@ -27,7 +21,7 @@
             </ion-range>
         </ion-item>
 
-        <div class="ion-text-center bodoni ion-padding ion-margin-hor" style="margin-top:12vh;color:#bbb" v-if="!questions[0]">
+        <div class="ion-text-center bodoni ion-padding head" style="margin-top:12vh;color:#bbb" v-if="!questions[0]">
             <h3>
                 <b>
                     No Question Found for the Selected Range
@@ -35,7 +29,7 @@
             </h3>
         </div>
 
-        <ion-list lines="full">
+        <ion-list lines="full" class="pg">
             <vue-collapsible-panel-group accordion>
                 <vue-collapsible-panel v-for="q in questions" :key="q.id" :expanded="false" class="">
                     <template #title>

@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">lookout</string>
-    <string name="title_activity_main">lookout</string>
-    <string name="package_name">com.look.out</string>
-    <string name="custom_url_scheme">com.look.out</string>
-</resources>

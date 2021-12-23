@@ -18,13 +18,14 @@
     width: 100%;
 }
 .look-blue{
-    background-color: #96b4ffff;
+    background-color: #0775ce;
 }
 ion-item{
     --border-color:white !important;
 }
 ion-button{
     --box-shadow: none !important;
+    max-width:500px;
 }
 ion-page{
     background-color:white !important
@@ -35,13 +36,13 @@ ion-header {
     /* border-bottom: 1px solid lightgray; */
 }
 
-.century{
-    /* //Century Gothic Replaced by Source Sans */
+.head{
+    font-family: 'Source sans pro'
 }
-.bodoni{
-    /* Bodoni Replcaed by */
-    font-family: 'Arial';
+.pg{
+    font-family: 'Roboto';
 }
+
 .top-div{
     justify-content: center;
     text-align: center;
@@ -62,9 +63,11 @@ ion-header {
     margin: 10px;
 }
 .button{
-    height:50px;
+    height:60px;
     --border-radius: 20px !important;
     font-style: capitalize;
+    background-color:linear-gradient(#0775ce, #1f4e7e);
+    margin:auto auto !important
 }
 .df{
     display: flex;

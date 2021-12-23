@@ -41,9 +41,13 @@ import {
     openLoading,
     Get,
     openToast,
-    Remove
+    Remove,
+    showError
 } from '../storage';
-import { getAuth, signOut } from "firebase/auth";
+import {
+    getAuth,
+    signOut
+} from "firebase/auth";
 
 export default {
     name: 'Profile',
@@ -76,7 +80,6 @@ export default {
                 });
             await alert.present();
 
-            
             const role = await alert.onDidDismiss();
             console.log('onDidDismiss resolved with role', role);
 
@@ -84,35 +87,35 @@ export default {
                 openLoading()
                 const token = await Get('token')
 
-                axios.post(this.$hostname + '/api/user/logout', {},{
+                axios.post(this.$hostname + '/api/user/logout', {}, {
                         headers: {
                             "Authorization": "Bearer " + token
                         }
                     })
-                    .then((res) => {
+                    .then(() => {
                         dismiss()
-                        openToast(res.data.message)
+                        openToast("Logging out Successfully")
                         Remove('token')
                         location.replace('/home')
                     })
                     .catch((error) => {
                         console.error(error)
                         Remove('token')
-                        openToast(error.message)
+                        showError(error.message)
                         dismiss()
                     })
 
                 const auth = getAuth();
-            signOut(auth).then(() => {
-            // Sign-out successful.
-            }).catch((error) => {
-                console.log(error.message)
-            // An error happened.
-            });
+                signOut(auth).then(() => {
+                    // Sign-out successful.
+                }).catch((error) => {
+                    console.log(error.message)
+                    // An error happened.
+                });
             }
         },
     },
-  };
+};
 </script>
 
 <style scoped>

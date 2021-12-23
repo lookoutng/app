@@ -14,10 +14,10 @@
     <ion-input class="button century ion-margin-top" :value="tel" disabled></ion-input>
     <ion-input class="button century ion-margin-top" v-model="username" placeholder="Username" @keyup="checkChanges" required="true"></ion-input>
     <ion-input class="button century ion-margin-top" v-model="email" type="email" placeholder="Example@gmail.com" @keyup="checkChanges" required="true"></ion-input>
-    <ion-button expand="block bodoni ion-text-capitalize text16 ion-margin-top" type="submit" id="ProfileUpdate"  disabled>
+        <ion-button expand="block bodoni ion-text-capitalize text16 ion-margin-top" type="submit" id="ProfileUpdate" disabled>
             Update
-    </ion-button>
-</form>
+        </ion-button>
+    </form>
 </template>
 
 <script>
@@ -41,35 +41,35 @@ import axios from 'axios'
 
 export default {
     name: 'Register',
-    props:['href'],
+    props: ['href'],
     components: {
         IonButton,
         IonText,
         IonInput,
         Icon
     },
-      data() {
+    data() {
         return {
             email: '',
             Oemail: '',
             username: '',
             Ousername: '',
             dp: '',
-            image:'',
-            tel:''
+            image: '',
+            tel: ''
         }
     },
     methods: {
-         async getNumber(){
+        async getNumber() {
             const tel = await Get('tel')
-                this.number = tel
+            this.number = tel
 
             return tel;
         },
-        Ihaveedited(){
-                document.getElementById('ProfileUpdate').disabled = false
+        Ihaveedited() {
+            document.getElementById('ProfileUpdate').disabled = false
         },
-        checkChanges(){
+        checkChanges() {
             if (this.Oemail != this.email || this.Ousername != this.username || this.$route.name == "Reg")
                 document.getElementById('ProfileUpdate').disabled = false
             else
@@ -78,10 +78,7 @@ export default {
         preview() {
             this.Ihaveedited()
             var imagefile = document.querySelector('#dp');
-            var label = document.querySelector('#label');
             this.image = URL.createObjectURL(imagefile.files[0])
-
-            label.style.BackgroundImage = this.image 
             console.log(imagefile.files[0])
         },
         async update() {
@@ -96,14 +93,14 @@ export default {
                     Store('points', res.data.user.points)
                     Store('dp', res.data.user.dp)
                     this.checkChanges()
-                    
+
                     Store('name', res.data.user.username)
                     Store('email', res.data.user.email)
                     openToast(res.data.message)
 
-                    if(this.$route.name == "Reg")
+                    if (this.$route.name == "Reg")
                         location.replace('/dashboard')
-                        
+
                     dismiss()
                 })
                 .catch((error) => {
@@ -181,6 +178,6 @@ export default {
     background-size: cover !important;
     padding: 0px;
     box-shadow: lightgray 0px 1px 5px 2px;
-    background-repeat:no-repeat !important;
+    background-repeat: no-repeat !important;
 }
 </style>
