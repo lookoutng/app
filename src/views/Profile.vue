@@ -44,10 +44,7 @@ import {
     Remove,
     showError
 } from '../storage';
-import {
-    getAuth,
-    signOut
-} from "firebase/auth";
+import firebase from "firebase/compat/app";
 
 export default {
     name: 'Profile',
@@ -105,8 +102,8 @@ export default {
                         dismiss()
                     })
 
-                const auth = getAuth();
-                signOut(auth).then(() => {
+                const auth = firebase.getAuth();
+                firebase.signOut(auth).then(() => {
                     // Sign-out successful.
                 }).catch((error) => {
                     console.log(error.message)

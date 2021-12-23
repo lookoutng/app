@@ -8,7 +8,7 @@
 import {
     IonApp,
     IonRouterOutlet,
-     onIonViewWillEnter,
+    onIonViewWillEnter,
     onIonViewDidEnter,
     onIonViewWillLeave,
     onIonViewDidLeave

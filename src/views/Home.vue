@@ -52,18 +52,8 @@ import {
     openToast,
     openLoading,
 } from "../storage";
-// import {
-//     Swiper,
-//     SwiperSlide
-// } from 'swiper/vue/swiper-vue.js';
-// import 'swiper/swiper.scss'; // core Swiper
-
 import firebase from "firebase/compat/app";
-import {
-    getAuth,
-    RecaptchaVerifier,
-    signInWithPhoneNumber
-} from "firebase/auth";
+
 
 export default {
     name: 'Home',
@@ -73,8 +63,6 @@ export default {
         IonButton,
         IonInput,
         CountryCode,
-        // Swiper,
-        // SwiperSlide,
     },
     data() {
         return {
@@ -86,10 +74,10 @@ export default {
             console.log(CountryCode.data().current + this.tel.substring(1))
         },
         firebaseLogin(){
-            const auth = getAuth();
+            const auth = firebase.getAuth();
             const phoneNumber = CountryCode.data().current + this.tel.substring(1);
             
-            signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+            firebase.signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
             .then((confirmationResult) => {
 
                 // SMS sent. Prompt user to type the code from the message, then sign the
@@ -127,12 +115,12 @@ export default {
                 this.firebaseLogin()
             }
             else{
-                window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
+                window.recaptchaVerifier = new firebase.RecaptchaVerifier('recaptcha', {
                     size: 'invisible',
                     callback: () => {
                         console.log("geer")
                     }
-                }, getAuth());
+                }, firebase.getAuth());
                 window.recaptchaVerifier.callback = this.firebaseLogin() 
             }
         },
