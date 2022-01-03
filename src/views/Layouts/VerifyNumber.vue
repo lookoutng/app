@@ -1,21 +1,21 @@
 <template>
-<ion-footer class="ion-padding" style="max-height:500px !important">
+<ion-footer class="ion-padding">
     <div class="ion-text-end">
         <ion-text @click="closeModal" class="century">
-            <Icon icon="iconoir:cancel" class="ion-float-start" style="font-size:30px !important" /><br>
+            <Icon icon="iconoir:cancel" class="ion-float-start" /><br>
         </ion-text>
     </div>
-    <div class="ion-padding-vertical ion-padding-start text14 century " style="margin-top:20px !important">
-        <ion-text class="ion-text-center">
-            A Verification code has been sent to {{ tel }} , expires in 10 minutes.
+    <div class="ion-padding-vertical ion-padding-start century vef-div" >
+        <ion-text class="ion-text-center text18 head">
+                Verification sent to <b>{{ tel }}</b> , expires in 10 minutes.
         </ion-text>
     </div>
     <br>
-    <form class="ion-padding" style="margin-top:20vh" @submit.prevent="verify">
-            <ion-item>
+    <form class="ion-padding" @submit.prevent="verify">
+            <ion-item class="ion-margin-vertical">
                 <ion-input type="text" v-model="code" minLength="6" maxLength="6" class="century  text14" placeholder="Security Code"></ion-input>
             </ion-item>
-            <ion-button class="bodoni ion-text-capitalize ion-margin-top" expand="block" type="submit">
+            <ion-button class="bodoni ion-text-capitalize ion-margin-vertical" expand="block" type="submit">
                     Verify
             </ion-button>
     </form>
@@ -92,7 +92,6 @@ export default {
     setup() {
         const closeModal = function () {
             modalController.dismiss();
-
         };
 
         return {
@@ -109,7 +108,6 @@ export default {
 ion-item {
     --border-color: white;
 }
-
 .ion-item {
     --border-color: lightgray !important;
 }
@@ -118,8 +116,16 @@ ion-input {
     --background: none;
     border: none;
 }
-
 ion-input:focus {
     border-bottom: 2px solid blue;
+}
+form{
+    margin-top:20vh
+}
+.vef-div{
+    margin-top:20px !important
+}
+Icon{
+    font-size:30px !important
 }
 </style>
