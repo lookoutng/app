@@ -102,7 +102,7 @@ export default {
             });
         },
         async login() {
-            openLoading()
+            openLoading(60000,false)
             firebase.initializeApp({
                 // measurementId: "G-MEASUREMENT_ID",
                 apiKey: 'AIzaSyCK2fTFYuAuJ-WgZd3JqJGMugWRE8V8M1Y',

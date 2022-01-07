@@ -1,6 +1,6 @@
 {
   "appId": "com.look.out",
-  "appName": "lookout",
+  "appName": "LookOut",
   "webDir": "dist",
   "bundledWebRuntime": false,
   "plugins": {
@@ -10,6 +10,14 @@
     },
     "PushNotifications": {
       "presentationOptions": ["badge", "sound", "alert"]
+    },
+    "BluetoothLe": {
+      "displayStrings": {
+        "scanning": "Am Scannen...",
+        "cancel": "Abbrechen",
+        "availableDevices": "Verfügbare Geräte",
+        "noDeviceFound": "Kein Gerät gefunden"
+      }
     }
   }
 }

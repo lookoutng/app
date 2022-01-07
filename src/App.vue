@@ -20,6 +20,14 @@ import axios from 'axios'
 import {
     Geolocation
 } from '@capacitor/geolocation';
+import { OpenNativeSettings } from 'cordova-open-native-settings';
+
+// import {
+// //   ActionPerformed,
+// //   PushNotificationSchema,
+//   PushNotifications,
+// //   Token,
+// } from '@capacitor/push-notifications'
 
 export default {
     name: 'App',
@@ -29,14 +37,17 @@ export default {
     },
     async created() {
         isLoggedIn()
-        const token = await Get('token')
+        // let islocationEnabled
+        const token = await Get('token');
+        console.log("goo" + OpenNativeSettings(""))
+
         if (token) {
             const coordinates = await Geolocation.getCurrentPosition().catch((e)=>{
-                console.log(e)
-                if(e.code == 1){
+                console.log(e.message)
+                if(e.code == 1 || e.message == "location disabled"){
                     console.log("Not Working")
-                    openToast("Application can't work without location, Kindly turn On..App closing in 3 sec")
-                    navigator['app'].exitApp()
+                    openToast("Application can't work without location, Kindly turn On..App closing in 3 sec",10000)
+                    setTimeout(() => {navigator['app'].exitApp()}, 4000)
                 }
             });
             console.log(coordinates)
@@ -73,10 +84,7 @@ export default {
             .catch((error) => {
                 console.log(error)
             })
-            // else{
-            //     openToast("App can't work without location, closing in 3 secs")
-            //     setTimeout(3000,navigator.app.exitApp())
-            // }
+            
 
 
         }
@@ -86,6 +94,44 @@ export default {
         });
 
     },
+    setup(){
+    //     PushNotifications.requestPermissions().then(result => {
+    //   if (result.receive === 'granted') {
+    //     // Register with Apple / Google to receive push via APNS/FCM
+    //     PushNotifications.register();
+    //   } else {
+    //     // Show some error
+    //   }
+    // });
+
+    // // On success, we should be able to receive notifications
+    // PushNotifications.addListener('registration',
+    //   (token) => {
+    //     alert('Push registration success, token: ' + token.value);
+    //   }
+    // );
+
+    // // Some issue with our setup and push will not work
+    // PushNotifications.addListener('registrationError',
+    //   (error) => {
+    //     alert('Error on registration: ' + JSON.stringify(error));
+    //   }
+    // );
+
+    // // Show us the notification payload if the app is open on our device
+    // PushNotifications.addListener('pushNotificationReceived',
+    //   (notification) => {
+    //     alert('Push received: ' + JSON.stringify(notification));
+    //   }
+    // );
+
+    // // Method called when tapping on a notification
+    // PushNotifications.addListener('pushNotificationActionPerformed',
+    //   (notification) => {
+    //     alert('Push action performed: ' + JSON.stringify(notification));
+    //   }
+    // );
+    }
      
 }
 </script>

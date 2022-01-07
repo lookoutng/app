@@ -1,6 +1,6 @@
 {
 	"appId": "com.look.out",
-	"appName": "lookout",
+	"appName": "LookOut",
 	"webDir": "dist",
 	"bundledWebRuntime": false,
 	"plugins": {

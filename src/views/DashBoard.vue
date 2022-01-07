@@ -17,6 +17,8 @@
             </ion-text>
         </div>
 
+        
+
         <form @submit.prevent="createQuestion()" class="pg" v-if="points >= 30">
             <ion-item class="ion-margin-top">
                 <ion-select class="text14" v-model="type" interface="popover" no-lines required>
@@ -25,15 +27,15 @@
                     <ion-select-option value="S">Short text</ion-select-option>
                 </ion-select>
             </ion-item>
+                
             <ion-item>
-                <Icon icon="bx:bx-current-location" slot="end" style="color:blue" />
-                <ion-input class="text14" v-model="location" placeholder="Target Location" required></ion-input>
+                <Icon icon="bx:bx-current-location" class="text18" slot="end" style="color:blue" @click="getMyLocation" />
+                <input id="location" v-model="location" @click="getAddress()" class="text14 ion-no-border w-100" placeholder="Target Location" type="text"/>
             </ion-item>
-            <locate></locate>
 
             <div class="">
                 <ion-item>
-                    <ion-textarea class="df alm" v-model="body" placeholder="Your Question..."  required></ion-textarea>
+                    <ion-textarea @click="getTargetLocation" class="df alm" v-model="body" placeholder="Your Question..."  required></ion-textarea>
                 </ion-item>
                 <br>
 
@@ -121,9 +123,12 @@ import {
     openLoading,
     Store,
     dismiss,
-    showError
+    showError,
+    getAddress
 } from '../storage';
 import axios from 'axios';
+
+
 export default {
     name: 'QuestionHistory',
     components: {
@@ -135,7 +140,7 @@ export default {
         IonSelect,
         IonSelectOption,
         IonTextarea,
-        Icon
+        Icon,
     },
     data() {
         return {
@@ -154,6 +159,45 @@ export default {
         }
     },
     methods: {
+        getAddress(){
+            getAddress()
+            this.getTargetLocation()
+        },
+        async getTargetLocation(){
+            const _this = this
+            let coords = {}
+
+            let results = (await window.google.maps.Geocoder.prototype.geocode({
+                address: _this.location
+            })).results;
+            
+            //console.log(results, status)
+            coords.lat = results[0].geometry.location.lat()
+            coords.long = results[0].geometry.location.lng()
+
+            return coords;
+        },
+        async getMyLocation(){
+            const _this = this
+            await Geolocation.getCurrentPosition().then((e) => {
+
+            const lat = e.coords.latitude
+            const long = e.coords.longitude
+            const location =  new window.google.maps.LatLng(lat, long)
+
+            window.google.maps.Geocoder.prototype.geocode({
+                location:location
+            },function(results, status) {
+                _this.location = results[4].formatted_address
+                if(status != 'OK'){
+                    openToast("Invalid Location, Kindly choose from the dropdown")
+                }
+                console.log(results, status)
+            })
+
+            })
+            .catch((e) => console.log(e))
+        },
         save() {
             this.options.push({
                 body: this.addOption
@@ -183,10 +227,10 @@ export default {
         },
         async createQuestion() {
             openLoading()
-            const coordinates = await Geolocation.getCurrentPosition();
-
-            const lat = coordinates.coords.latitude
-            const long = coordinates.coords.longitude
+            let targetLocation  = await this.getTargetLocation()
+            const lat = targetLocation.lat
+            const long = targetLocation.long
+            
             let success = false
             const token = await Get('token');
 
@@ -227,6 +271,8 @@ export default {
     async mounted() {
         openLoading()
         const token = await Get('token')
+        
+
         axios.get(this.$hostname + '/api/user', {
                 headers: {
                     "Authorization": "Bearer " + token
@@ -268,9 +314,10 @@ export default {
 }
 
 .-img {
-    padding: 10px;
+    padding: px;
 }
-
+Icon{
+}
 ion-item {
     --border-color: white;
 }
@@ -288,12 +335,21 @@ textarea {
     min-height: 200px !important;
     
 }
+input{
+    border:none !important;
+    min-height:50px;
+    background-color: white !important;
+
+}
+input:active{
+    border:none !important; 
+    
+}
 .ion-no-padding {
     --padding-bottom: 0px !important;
     --padding-top: 0px !important;
     --padding-start: 0px !important;
     --padding-end: 0px !important;
 }
-
 
 </style>

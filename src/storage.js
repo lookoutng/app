@@ -1,9 +1,10 @@
 import { Storage } from '@capacitor/storage';
-// import Vue from 'vue';
 import { toastController, loadingController } from '@ionic/vue'
 
 let loading
+let autoComplete;
 let toast
+
 export async function Store(key, value) {
   await Storage.set({
     key: key,
@@ -34,13 +35,12 @@ export async function openLoading(timeout = 60000) {
     .create({
       cssClass: 'century loading text-12',
       message: 'Loading...',
-      backdropDismiss: false,
+      backdropDismiss: true,
       duration: timeout,
     });
 
   setTimeout(function () {
     loading.dismiss()
-    // openToast("Unknown Error Ocurred")
   }, timeout);
   await loading.present();
 
@@ -92,3 +92,11 @@ export async function dismiss() {
   loading.dismiss()
 }
 
+export function getAddress(){
+  if(!autoComplete){
+      autoComplete = new window.google.maps.places.Autocomplete(
+          document.getElementById("location")
+      )
+  console.log(autoComplete)
+}
+}

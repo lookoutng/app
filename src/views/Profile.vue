@@ -5,16 +5,16 @@
     </ion-header>
     <ion-content class="ion-padding-bottom ion-text-center">
         <Register href="/profile"></Register>
-        <div class="ion-text-center text-gray text20">
+        <div class="ion-text-center text-gray pg text20">
             <br>
             <ion-text color=" bodoni">
-                <b>About</b>
+                About
             </ion-text><br><br>
             <ion-text color=" bodoni ">
-                <b>Support</b>
+                Support
             </ion-text><br><br>
             <ion-text color="danger bodoni" @click="logout">
-                <Icon icon="websybol:logout" :rotate="2" /> <b>Log Out</b>
+                <Icon icon="websybol:logout" :rotate="2" /> Log Out
             </ion-text>
         </div>
     </ion-content>
@@ -116,20 +116,7 @@ export default {
 </script>
 
 <style scoped>
-.img {
-    max-width: 150px;
-    background: white !important;
 
-}
-
-.profile {
-    min-width: 210px;
-    min-height: 210px;
-    height: 20vh;
-    width: 20vh;
-    border-radius: 100%;
-    align-self: center
-}
 
 ion-button {
     --background: transparent !important;

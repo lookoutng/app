@@ -1,6 +1,6 @@
 <template>
-<form class="ion-padding ion-text-center" style="margin-top:7vh" @submit.prevent="update">
-    <div class=" df jcm">
+<form class="ion-padding ion-text-center pg" style="margin-top:7vh" @submit.prevent="update">
+    <div class=" df jcm ion-margin-bottom">
         <label id="label" for="dp" :style=" image ? 'background-image:url('+ image + ');' :'background-image:url('+ this.$hostname + '/images/' + this.dp +  ');background-repeat:no-repeat;'" class="profile df alm jcm">
             <Icon icon="carbon:add-filled" class="ion-no-margin ion-no-padding" style="color:#3880ff;position:absolute;background:white;border-radius:100%;padding:0px;min-width:50px;min-height:50px;right:0;top:10%" />
             <ion-text v-if="!image && !dp" class="century text16">
@@ -13,7 +13,7 @@
     <input id="dp" accept="image/png, image/gif, image/jpeg" class="ion-hide button century ion-margin-top" type="file" placeholder="Username" @change="preview" />
     <ion-input class="button century ion-margin-top" :value="tel" disabled></ion-input>
     <ion-input class="button century ion-margin-top" v-model="username" placeholder="Username" @keyup="checkChanges" required="true"></ion-input>
-    <ion-input class="button century ion-margin-top" v-model="email" type="email" placeholder="Example@gmail.com" @keyup="checkChanges" required="true"></ion-input>
+    <ion-input class="button century ion-margin-top ion-margin-bottom" v-model="email" type="email" placeholder="Example@gmail.com" @keyup="checkChanges" required="true"></ion-input>
         <ion-button expand="block bodoni ion-text-capitalize text16 ion-margin-top" type="submit" id="ProfileUpdate" disabled>
             Update
         </ion-button>
