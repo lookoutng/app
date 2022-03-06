@@ -16,6 +16,14 @@
 				"sound",
 				"alert"
 			]
+		},
+		"BluetoothLe": {
+			"displayStrings": {
+				"scanning": "Am Scannen...",
+				"cancel": "Abbrechen",
+				"availableDevices": "Verfügbare Geräte",
+				"noDeviceFound": "Kein Gerät gefunden"
+			}
 		}
 	}
 }

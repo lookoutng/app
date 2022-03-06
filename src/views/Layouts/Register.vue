@@ -35,7 +35,6 @@ import {
     openLoading,
     dismiss,
     showError,
-    openToast
 } from '../../storage'
 import axios from 'axios'
 
@@ -96,7 +95,7 @@ export default {
 
                     Store('name', res.data.user.username)
                     Store('email', res.data.user.email)
-                    openToast(res.data.message)
+                    showError(res.data.message)
 
                     if (this.$route.name == "Reg")
                         location.replace('/dashboard')

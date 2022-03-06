@@ -30,12 +30,12 @@ export async function isLoggedIn() {
   console.log(val)
 }
 
-export async function openLoading(timeout = 60000) {
+export async function openLoading(timeout = 10000) {
   loading = await loadingController
     .create({
       cssClass: 'century loading text-12',
       message: 'Loading...',
-      backdropDismiss: true,
+      backdropDismiss: false,
       duration: timeout,
     });
 
@@ -58,19 +58,19 @@ export async function openToast(message, timeout = 5000) {
 
 export function showError(error) {
 
-  // if (error.response) {
-  //   if (error.response.status < 400)
-  //     openToast(error.response.data.message)
+  if (error.response) {
+    if (error.response.status < 400)
+      openToast(error.response.data.message)
 
-  // }
-  // else if (error.request) {
-  //   openToast("Network Error")
+  }
+  else if (error.request) {
+    openToast("Network Error")
 
-  // }
-  // else {
-  //   openToast("Unknown error occured")
-  // }
-  openToast(error);
+  }
+  else {
+    openToast("Unknown error occured")
+  }
+  // openToast(error);
 
 }
 

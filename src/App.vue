@@ -20,7 +20,9 @@ import axios from 'axios'
 import {
     Geolocation
 } from '@capacitor/geolocation';
-import { OpenNativeSettings } from 'cordova-open-native-settings';
+// import { OpenNativeSettings } from 'cordova-open-native-settings';
+// import Cordova from 'cordova';
+import { NativeSettings } from 'capacitor-native-settings';
 
 // import {
 // //   ActionPerformed,
@@ -39,7 +41,9 @@ export default {
         isLoggedIn()
         // let islocationEnabled
         const token = await Get('token');
-        console.log("goo" + OpenNativeSettings(""))
+        console.log("goo" + await NativeSettings.openAndroid({
+          option: "location",
+        }))
 
         if (token) {
             const coordinates = await Geolocation.getCurrentPosition().catch((e)=>{
@@ -47,7 +51,7 @@ export default {
                 if(e.code == 1 || e.message == "location disabled"){
                     console.log("Not Working")
                     openToast("Application can't work without location, Kindly turn On..App closing in 3 sec",10000)
-                    setTimeout(() => {navigator['app'].exitApp()}, 4000)
+                    // setTimeout(() => {navigator['app'].exitApp()}, 4000)
                 }
             });
             console.log(coordinates)
