@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d228bf5"],{db01:function(e,n,r){"use strict";r.r(n),r.d(n,"NativeSettingsWeb",(function(){return t}));var o=r("1547");class t extends o["a"]{async openAndroid(){return new Promise((e,n)=>{n(new Error("Not implemented for web."))})}async openIOS(){return new Promise((e,n)=>{n(new Error("Not implemented for web."))})}}}}]);
+//# sourceMappingURL=chunk-2d228bf5.bc63ef0f.js.map
