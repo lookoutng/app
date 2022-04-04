@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './router';
 
 import { IonicVue } from '@ionic/vue';
-import  './storage.js';
 
 // import VuePlaceAutocomplete from 'vue-place-autocomplete';
 
@@ -27,9 +26,9 @@ import '../src/theme/styles.css';
 import './theme/variables.css';
 /* Theme variables */
 
-import AppHeader  from './views/Layouts/AppHeader.vue';
-import Footer  from './views/Layouts/Footer.vue';
-import Refresh  from './views/Layouts/Refresh.vue';
+import AppHeader  from '@/components/AppHeader.vue';
+import Footer  from '@/components/Footer.vue';
+import Refresh  from '@/components/Refresh.vue';
 
 const app = createApp(App)
   .use(IonicVue)

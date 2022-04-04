@@ -72,27 +72,13 @@
 </template>
 
 <script>
-import Report from './Layouts/Report.vue'
-import {
-    IonContent,
-    IonPage,
-    IonList,
-    IonItem,
-    IonText,
-    IonBackButton,
-    IonInput,
-    modalController
-} from '@ionic/vue'
-import {
-    dismiss,
-    Get,
-    openLoading,
-    openToast,
-    showError
-} from '../storage'
-import axios from 'axios'
+import { IonContent, IonPage, IonList, IonItem, IonText, IonBackButton, IonInput, modalController } from '@ionic/vue'
+import { openLoading, openToast } from '@/functions/widget'
+import { updateQuestion, getAQuestion } from '@/services/question'
+import { updateAnswer } from '@/services/answer'
+import Question from '@/components/Question.vue'
+import Report from '@/components/Report.vue'
 import moment from 'moment'
-import Question from './Layouts/Question.vue'
 
 export default {
     name: 'SingleQuestion',
@@ -124,24 +110,12 @@ export default {
         async update() {
             openLoading()
             this.editing = false
-
-            const token = await Get('token')
-            axios.put(this.$hostname + '/api/question/update/' + this.$route.params.id, {
-                    body: this.question.body,
-                }, {
-                    headers: {
-                        "Authorization": 'Bearer ' + token,
-                        "Accept": 'application/json'
-                    },
-                })
-                .then((res) => {
-                    openToast(res.data.message)
-                    dismiss()
-                })
-                .catch((error) => {
-                    console.error(error)
-                    dismiss()
-                })
+            updateQuestion(this.$route.params.id, this.question.body)
+                .then((res) => 
+                    {
+                        openToast(res.data.message)
+                    }
+                )
         },
         async openModal(id) {
             const modal = await modalController.create({
@@ -153,31 +127,12 @@ export default {
             return modal.present();
         },
         async liked(id) {
-            var status = this.answers[id].status;
+            let isLiked = this.answers[id].status;
+            isLiked = !isLiked
 
-            if (status == 1) {
-                status = 0
-            } else {
-                status = 1
-            }
-            this.answers[id].status = status
-            const token = await Get('token')
-
-            axios.put(this.$hostname + '/api/answer/update/' + this.answers[id].id, {
-                    status: status,
-                }, {
-                    headers: {
-                        "Authorization": 'Bearer ' + token,
-                        "Accept": 'application/json'
-                    },
-                })
-                .then(() => {
-                    this.$forceUpdate();
-                    // location.href = "/dashboard"
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
+            updateAnswer(this.answers[id].id, { status:Number(isLiked)})
+            this.answers[id].status = isLiked
+                
         },
         currentDateTime(time) {
             return moment(time, "YYYY-MM-DD").fromNow(); // 9 years ago
@@ -189,25 +144,12 @@ export default {
     },
     async created() {
         openLoading()
-        console.log(this.$route.params.id);
-        const token = await Get('token')
-        axios.get(this.$hostname + '/api/question/id/' + this.$route.params.id, {
-                headers: {
-                    "Authorization": "Bearer " + token
-                }
-            })
+        getAQuestion(this.$route.params.id)
             .then((res) => {
-                dismiss()
-                console.log(res.data)
                 this.answers = res.data.answers
                 this.question = res.data.question
                 this.time = res.data.question.created_at
 
-            })
-            .catch((error) => {
-                dismiss()
-                showError(error.message)
-                console.log(error)
             })
     }
 };

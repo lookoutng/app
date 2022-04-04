@@ -38,29 +38,13 @@
 </template>
 
 <script>
-import {
-    IonContent,
-    IonPage,
-    IonButton,
-    IonInput,
-    modalController
-} from '@ionic/vue'
-import CountryCode from './Layouts/CountryCode.vue'
-import VerifyNumberVue from './Layouts/VerifyNumber.vue';
-import {
-    Get,
-    openToast,
-    openLoading,
-} from "../storage";
-import firebase from "firebase/compat/app";
-
-import 
-    { 
-        getAuth,
-        RecaptchaVerifier,
-        signInWithPhoneNumber
-    } 
-from "firebase/auth"
+import { IonContent, IonPage, IonButton, IonInput, modalController } from '@ionic/vue'
+import CountryCode from '@/components/CountryCode.vue'
+import VerifyNumberVue from '@/components/VerifyNumber.vue';
+import { openToast, openLoading } from '@/functions/widget';
+import { get } from '@/functions/storage';
+import { firebaseInit } from '@/functions/firebase/initialize';
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth"
 
 export default {
     name: 'Home',
@@ -77,9 +61,6 @@ export default {
         }
     },
     methods: {
-        getCountryCode() {
-            console.log(CountryCode.data().current + this.tel.substring(1))
-        },
         firebaseLogin(){
             const auth = getAuth();
             const phoneNumber = CountryCode.data().current + this.tel.substring(1);
@@ -87,37 +68,23 @@ export default {
             signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
             .then((confirmationResult) => {
 
-                // SMS sent. Prompt user to type the code from the message, then sign the
-                // user in with confirmationResult.confirm(code).
-                window.confirmationResult = confirmationResult;
-                console.log('success')
-                this.createModal()
-                // ...
-            }).catch((error) => {
-                // window.recaptchaVerifier.recaptcha.reset()
-                console.log(error)
-                openToast("SMS not sent, try confirm the number and your network")
-                // Error; SMS not sent
-                // ...
-            });
+                    // SMS sent. Prompt user to type the code from the message, then sign the
+                    window.confirmationResult = confirmationResult;
+                    console.log('SMS sent, check your phone')
+                    this.createModal()
+                }
+            )
+            .catch(() => 
+                {
+                    openToast("SMS not sent, try confirm the number and your network")
+                    // Error; SMS not sent
+                }
+            );
         },
         async login() {
-            openLoading(60000,false)
-            firebase.initializeApp({
-                // measurementId: "G-MEASUREMENT_ID",
-                apiKey: 'AIzaSyCK2fTFYuAuJ-WgZd3JqJGMugWRE8V8M1Y',
-                authDomain: 'dailydata-21793.firebaseapp.com',
-                databaseURL: 'https://dailydata-21793.firebaseio.com',
-                projectId: 'dailydata-21793',
-                storageBucket: "'dailydata-21793.appspot.com",
-                messagingSenderId: "228418497521",
-                appId: '1:228418497521:web:dec1d095f60064269ab250',
-                serverKey: 'AAAANS7Nq_E:APA91bG4QzSXUsCdbRNtV3-AoBQ8xBlpLgHrxjpchxGcrdGiNTKhyHFZKSqlxsf_NAymLAkvyfeB5PmIez5xqGPphTkoi_ZTwV2BlEZC2zOMYeCXUQfvU3RE3GTuqr8_iS706qK5Bkg_',
-                publicKey: 'BFYu3NoIbmPGNi5ey1f4PmMrp8ATm1FwpuL8brwJzhnqvw817gay89G80lmgNeurtIEerFXqfVcFUtzHgase1uU',
+            openLoading(60000, false)
+            firebaseInit()
 
-            })
-
-           
             if(window.recaptchaVerifier){
                 this.firebaseLogin()
             }
@@ -125,7 +92,7 @@ export default {
                 window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
                     size: 'invisible',
                     callback: () => {
-                        console.log("geer")
+                        console.log("recaptchA created")
                     }
                 }, getAuth());
                 window.recaptchaVerifier.callback = this.firebaseLogin() 
@@ -144,23 +111,23 @@ export default {
         }
     },
     async created() {
-        const token = await Get('token')
+        const token = get('token')
 
         if (token) {
             location.replace("/dashboard")
         }
     },
     setup() {
-        const onSwiper = (swiper) => {
-            console.log(swiper);
-        };
-        const onSlideChange = () => {
-            console.log('slide change');
-        };
-        return {
-            onSwiper,
-            onSlideChange,
-        };
+        // const onSwiper = (swiper) => {
+        //     console.log(swiper);
+        // };
+        // const onSlideChange = () => {
+        //     console.log('slide change');
+        // };
+        // return {
+        //     onSwiper,
+        //     onSlideChange,
+        // };
     },
 
 };

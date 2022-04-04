@@ -72,30 +72,12 @@
 </template>
 
 <script>
-import {
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonTabButton,
-    IonTabBar
-} from '@ionic/vue'
-import {
-    VueCollapsiblePanelGroup,
-    VueCollapsiblePanel,
-} from '@dafcoe/vue-collapsible-panel'
-import {
-    dismiss,
-    Get,
-    openLoading,
-    openToast,
-    showError,
-} from '../storage'
-
-import axios from 'axios'
-
-import {
-    Geolocation
-} from '@capacitor/geolocation';
+import { IonContent, IonHeader, IonPage, IonTabButton, IonTabBar } from '@ionic/vue'
+import { VueCollapsiblePanelGroup, VueCollapsiblePanel } from '@dafcoe/vue-collapsible-panel'
+import { openLoading, openToast } from '@/functions/widget'
+import { Geolocation } from '@capacitor/geolocation';
+import { updateAnswer } from '@/services/answer';
+import { getQuestions } from '@/services/question';
 
 export default {
     name: 'QuestionHistory',
@@ -116,71 +98,40 @@ export default {
     methods: {
 
         open(id) {
-
-            var open = document.getElementsByClassName('ion-item')
-            open.forEach(element => {
-                element.classList.remove("ion-item")
-            });
+            let open = document.getElementsByClassName('ion-item')
+            open.forEach(element => element.classList.remove("ion-item"));
             document.getElementById('question' + id).classList.add("ion-item");
-
-            console.log(this.range)
         },
-        edit($answer_id) {
-            const ref = 'answer' + $answer_id
+        edit($answerId) {
+            const ref = 'answer' + $answerId
              document.getElementById(ref).disabled = false
         },
-        async update($answer_id) {
-            const token = await Get('token')
-
-            const ref = 'answer' + $answer_id
-            axios.put(this.$hostname + '/api/answer/update/' + $answer_id, {
-                    body: document.getElementById(ref).value,
-                }, {
-                    headers: {
-                        "Authorization": 'Bearer ' + token,
-                        "Accept": 'application/json'
-                    },
-                })
-                .then((res) => {
-                    openToast(res.data.message)
-                    this.close()
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
+        async update($answerId) {
+            const ref = 'answer' + $answerId
+            updateAnswer($answerId, document.getElementById(ref).value)
+                .then((res) => 
+                    {
+                        openToast(res.data.message)
+                        this.close()
+                    }
+                )
         },
     },
     async ionViewDidEnter() {
         openLoading()
-        const token = await Get('token')
         const coordinates = await Geolocation.getCurrentPosition();
-
         const lat = coordinates.coords.latitude
         const long = coordinates.coords.longitude
 
-        axios.get(this.$hostname + '/api/questions', {
-                headers: {
-                    "Authorization": 'Bearer ' + token,
-                    "Accept": 'application/json'
-                },
-                params: {
-                    lat: lat,
-                    long: long
+        getQuestions(lat, long)
+            .then((res) => 
+                {
+                    this.answered = res.data.answered
                 }
-            })
-            .then((res) => {
-                this.answered = res.data.answered
-                dismiss()
-            })
-            .catch((error) => {
-                console.log(error)
-                showError(error)
-                dismiss()
-            })
+            )
+            
     },
-    setup() {
-
-    }
+    
 };
 </script>
 

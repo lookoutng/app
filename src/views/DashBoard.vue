@@ -1,3 +1,4 @@
+
 <template>
 <ion-page>
     <ion-header>
@@ -100,34 +101,13 @@
 </template>
 
 <script>
-import {
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonText,
-    IonInput,
-    IonSelect,
-    IonSelectOption,
-    IonTextarea,
-
-} from '@ionic/vue'
-import {
-    Icon
-} from '@iconify/vue';
-import {
-    Geolocation
-} from '@capacitor/geolocation';
-import {
-    Get,
-    openToast,
-    openLoading,
-    Store,
-    dismiss,
-    showError,
-    getAddress
-} from '../storage';
-import axios from 'axios';
-
+import { IonContent, IonHeader, IonPage, IonText, IonInput, IonSelect, IonSelectOption, IonTextarea } from '@ionic/vue'
+import { Icon } from '@iconify/vue';
+import { Geolocation } from '@capacitor/geolocation';
+import { openToast, openLoading } from '@/functions/widget';
+import { getObject } from '@/functions/storage';
+import { getAddress } from '@/functions/location';
+import { createQuestion } from '@/services/question';
 
 export default {
     name: 'QuestionHistory',
@@ -144,17 +124,20 @@ export default {
     },
     data() {
         return {
-            options: [{
+            addOption: '',
+            question: {
+                type: 'S',
+                body: '',
+                location: '',
+                lat:'',
+                long:'',
+                options: [{
                     body: 'yes'
                 },
                 {
                     body: 'no'
-                },
-            ],
-            addOption: '',
-            type: 'S',
-            body: '',
-            location: '',
+                }],
+            },
             points: '000'
         }
     },
@@ -165,17 +148,15 @@ export default {
         },
         async getTargetLocation(){
             const _this = this
-            let coords = {}
 
-            let results = (await window.google.maps.Geocoder.prototype.geocode({
-                address: _this.location
-            })).results;
+            let results = (await window.google.maps.Geocoder.prototype.geocode(
+                {
+                    address: _this.question.location
+                }
+            )).results;
             
-            //console.log(results, status)
-            coords.lat = results[0].geometry.location.lat()
-            coords.long = results[0].geometry.location.lng()
-
-            return coords;
+            this.question.lat = results[0].geometry.location.lat()
+            this.question.long = results[0].geometry.location.lng()
         },
         async getMyLocation(){
             const _this = this
@@ -185,78 +166,55 @@ export default {
             const long = e.coords.longitude
             const location =  new window.google.maps.LatLng(lat, long)
 
-            window.google.maps.Geocoder.prototype.geocode({
-                location:location
-            },function(results, status) {
-                _this.location = results[4].formatted_address
-                if(status != 'OK'){
-                    openToast("Invalid Location, Kindly choose from the dropdown")
-                }
-                console.log(results, status)
-            })
+            window.google.maps.Geocoder.prototype.geocode(
+                { location:location },
+                function(results, status) {
+                    _this.question.location = results[4].formatted_address
+                    if(status != 'OK'){
+                        openToast("Invalid Location, Kindly choose from the dropdown")
+                    }
+                    console.log(results, status)
+                })
 
             })
             .catch((e) => console.log(e))
         },
         save() {
-            this.options.push({
+            this.question.options.push({
                 body: this.addOption
             })
             this.addOption = ''
         },
         Remove(id) {
-            if (this.options.length > 2) {
+            if (this.question.options.length > 2) {
                 console.log(id)
                 if (id == 0)
-                    this.options.splice(0, 1)
+                    this.question.options.splice(0, 1)
                 else
-                    this.options.splice(id, 1)
+                    this.question.options.splice(id, 1)
             }
         },
-        rel() {
-            this.body = ''
-            this.location = ''
-            this.type = 'S'
-            this.options = [{
-                    body: 'yes'
-                },
-                {
-                    body: 'no'
-                },
-            ]
+        reload() {
+            this.question = ''
+            this.question.type = 'S'
+            this.question.option = [{body:'yes'},{body:'no'}]
         },
         async createQuestion() {
             openLoading()
-            let targetLocation  = await this.getTargetLocation()
-            const lat = targetLocation.lat
-            const long = targetLocation.long
-            
+            await this.getTargetLocation()
             let success = false
-            const token = await Get('token');
-
-            axios.post(this.$hostname + '/api/question/create', {
-                    body: this.body,
-                    type: this.type,
-                    lat: lat,
-                    long: long,
-                    options: this.options
-                }, {
-                    headers: {
-                        "Access-Control-Allow-Origin": "*",
-                        "Authorization": "Bearer " + token,
-                        "Accept": "application/json"
+            createQuestion(this.question)
+                .then(() => 
+                    {
+                        openToast('Question posted successfully')
+                        this.reload()
+                    }   
+                )
+                .catch(() => 
+                    {
+                        success = false
                     }
-                })
-                .then((res) => {
-                    console.log(res)
-                    openToast('Question posted successfully')
-                    this.rel()
-                    dismiss()
-                })
-                .catch((error) => {
-                    showError(error)
-                    success = false
-                })
+                )
 
             if (success) {
                 setTimeout(function () {
@@ -265,35 +223,11 @@ export default {
             }
         }
     },
-    setup() {
-
-    },
     async mounted() {
         openLoading()
-        const token = await Get('token')
-        
-
-        axios.get(this.$hostname + '/api/user', {
-                headers: {
-                    "Authorization": "Bearer " + token
-                }
-            })
-            .then((res) => {
-                this.points = res.data.user.points
-                Store('points', res.data.user.points)
-                Store('dp', res.data.user.dp)
-                Store('name', res.data.user.username)
-                Store('email', res.data.user.email)
-                dismiss()
-            })
-            .catch((error) => {
-                console.error(error)
-                openToast(error.message)
-                dismiss()
-
-            })
-
-    }
+        const user = getObject('user')
+        this.points = user.points     
+    },
 }
 </script>
 
