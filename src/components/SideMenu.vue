@@ -5,7 +5,7 @@
 
           <div class="df alm ion-padding">
               <ion-thumbnail>
-                <img :src=" user.dp ? this.$hostname+'/images/' + this.user.dp : ''" class=""/>
+                <!-- <img :src=" user.dp ? this.$hostname+'/images/' + this.user.dp : ''" class=""/> -->
               </ion-thumbnail>
               <div class="ion-padding">
                 <ion-label class="century ion-padding-end ion-text-wrap ion-text-sm" style="font-size:80%;">
@@ -82,8 +82,8 @@ export default {
 
               if(role.role == "OK") {
                   openLoading()
-                  logout()
-                  .then(() => 
+                  const testLogin = logout()
+                  testLogin.then(() => 
                       {
                           openToast("Logging out Successfully")
                           location.replace('/home')

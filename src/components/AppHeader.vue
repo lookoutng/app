@@ -52,8 +52,9 @@ export default {
             menuController.open('first');
         },
     },
-    async mounted(){
-        getLoggedInUser().then((res) => {
+    async created(){
+        getLoggedInUser()
+        .then((res) => {
             this.user = res.data.user
         })
     },

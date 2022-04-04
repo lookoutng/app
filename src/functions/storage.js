@@ -14,7 +14,7 @@ const getObject = (key) => {
 }
 
 const remove = (key) => {
-   localStorage.remove(key);
+   localStorage.removeItem(key);
 }
 
 const storeUser = (res) => {

@@ -45,7 +45,7 @@ export default {
             openLoading()
             createUser(this.tel).then((res) => {
                     console.log("user login", res.data)
-                    // location.replace('/register')
+                    location.replace('/register')
                 })
         },
         verify() {

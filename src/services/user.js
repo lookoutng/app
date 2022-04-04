@@ -3,38 +3,38 @@ import { storeUser, remove, store } from "@/functions/storage";
 
 
 export const getLoggedInUser = () => {
-    http.get('user').then((res) => {
+    const response = http.get('user').then((res) => {
         storeUser(res.data.user)
     })
-    return http;
+    return response;
 }
 
 export const updateUser = (formdata) => {
-    http.post('user/update', formdata)
-    return http;
+    const response = http.post('user/update', formdata)
+    return response;
 }
 
 export const createUser = (tel) => {
-    http.post('user/create', {
+    const response = http.post('user/create', {
         tel:tel
     })
     .then((res) => {
         console.log("user http", res.data)
-        storeUser('user', res.data.user)
+        storeUser(res.data.user)
         store('token', res.data.token)
     })
-    return http;
+    return response;
 }
 
 export const logout = () => {
-    http.post('user/logout')
+    const response = http.post('user/logout')
     .then(() => {
         remove('token')
     })
-    return http;
+    return response;
 }
 
 export const createLocation =  (formdata) => {
-    http.post('location/create' ,formdata)
-    return http;
+    const response = http.post('location/create' ,formdata)
+    return response;
 }
