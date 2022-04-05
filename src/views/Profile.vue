@@ -5,18 +5,6 @@
     </ion-header>
     <ion-content class="ion-padding-bottom ion-text-center">
         <Register href="/profile"></Register>
-        <div class="ion-text-center text-gray pg text20">
-            <br>
-            <ion-text color=" bodoni">
-                About
-            </ion-text><br><br>
-            <ion-text color=" bodoni ">
-                Support
-            </ion-text><br><br>
-            <ion-text color="danger bodoni" @click="logout">
-                <Icon icon="websybol:logout" :rotate="2" /> Log Out
-            </ion-text>
-        </div>
     </ion-content>
     <ion-footer>
         <Footer></Footer>
@@ -27,7 +15,6 @@
 <script>
 import { IonContent, IonHeader, IonPage, alertController } from '@ionic/vue'
 import Register from '@/components/Register.vue'
-import { Icon } from '@iconify/vue';
 import { openLoading, openToast } from '@/functions/widget';
 import { remove } from '@/functions/storage';
 import { logout } from '@/services/user';
@@ -40,7 +27,6 @@ export default {
         IonPage,
         IonHeader,
         Register,
-        Icon
     },
     data() {
         return {

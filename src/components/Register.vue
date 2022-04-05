@@ -112,7 +112,7 @@ export default {
         .then((res) => {
             t_his.user = res.user
             t_his.oldUser = res.user
-            console.log("Olduser", res.user.ponts)
+            console.log("Olduser", res.user.points)
             dismiss()
         })
         .catch((error) => {

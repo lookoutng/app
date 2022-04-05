@@ -1,6 +1,8 @@
 workflows:
-  lokout-ios:
+  lookout-ios:
     name: Look Out Ios Build
     scripts:
+        - name: "NPM Install"
+          script: npm install
         - name: "Ionic Ios Build"
           script: ionic capacitor build ios
