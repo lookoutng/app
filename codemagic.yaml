@@ -19,17 +19,17 @@ workflows:
               keychain initialize
               keychain add-certificates \
                   --certificate /tmp/certificate.p12 \
-                  --certificate-password lookout
+                  --certificate-password ${CERTIFICATE_PASSWORD?}
         - name: "Increment build number"
           script: agvtool new-version -all $BUILD_NUMBER
         - name: "Set up code signing settings on Xcode project"
           script: xcode-project use-profiles
         - name: "Build ipa for distribution"
           script: xcode-project build-ipa \
-                        --workspace "app\ios\App\App.xcworkspace" \
-                        --scheme "app\ios\App\App.xcodeproj"
-                        # --workspace "${XCODE_WORKSPACE?}" \
-                        # --scheme "${XCODE_SCHEME?}"
+                        # --workspace "app\ios\App\App.xcworkspace" \
+                        # --scheme "app\ios\App\App.xcodeproj"
+                        --workspace "${XCODE_WORKSPACE?}" \
+                        --scheme "${XCODE_SCHEME?}"
                   # --certificate-password ${CERTIFICATE_PASSWORD?}
     artifacts:
       - build/ios/ipa/*.ipa
