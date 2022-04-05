@@ -28,7 +28,7 @@
 
 <script>
 import { IonButtons, IonTitle, IonToolbar, menuController } from '@ionic/vue'
-import { getLoggedInUser } from '@/services/user'
+import { getObject } from '@/functions/storage'
 
 export default {
     name: 'AppHeader',
@@ -53,10 +53,7 @@ export default {
         },
     },
     async created(){
-        getLoggedInUser()
-        .then((res) => {
-            this.user = res.data.user
-        })
+       this.user = getObject('user')
     },
 }
 </script>

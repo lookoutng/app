@@ -1,10 +1,11 @@
 import { http } from "./http";
-import { storeUser, remove, store } from "@/functions/storage";
+import { storeObject, remove, store } from "@/functions/storage";
 
 
 export const getLoggedInUser = () => {
     const response = http.get('user').then((res) => {
-        storeUser(res.data.user)
+        storeObject(res.data.user)
+        return res.data
     })
     return response;
 }
@@ -15,13 +16,12 @@ export const updateUser = (formdata) => {
 }
 
 export const createUser = (tel) => {
-    const response = http.post('user/create', {
-        tel:tel
-    })
+    const response = http.post('user/create', { tel })
     .then((res) => {
         console.log("user http", res.data)
-        storeUser(res.data.user)
+        storeObject(res.data.user)
         store('token', res.data.token)
+        return res.data
     })
     return response;
 }

@@ -23,9 +23,8 @@
 <script>
 import { IonButton, IonText, IonInput, } from '@ionic/vue'
 import { Icon } from '@iconify/vue';
-import { storeUser } from '@/functions/storage'
 import { openLoading, dismiss, showError } from '@/functions/widget'
-import  {getLoggedInUser, updateUser } from '@/services/user'
+import  { getLoggedInUser, updateUser } from '@/services/user'
 
 export default {
     name: 'Register',
@@ -39,15 +38,19 @@ export default {
     data() {
         return {
             oldUser: {
-                username: '',
-                email: '',
+                dp: "",
+                email: "",
+                points: 0,
+                tel: "",
+                username: ""
             },
             image: '',
-            user:{ 
-                username: '',
-                email: '',
-                dp: '',
-                tel: ''
+            user: {
+                dp: "",
+                email: "",
+                points: 0,
+                tel: "",
+                username: ""
             }
         }
     },
@@ -64,8 +67,8 @@ export default {
         preview() {
             this.iHaveEdited()
             let imagefile = document.querySelector('#dp');
-            this.user.image = URL.createObjectURL(imagefile.files[0])
-            console.log(imagefile.files[0])
+            this.image = URL.createObjectURL(imagefile.files[0])
+            console.log("Image:",imagefile.files[0])
         },
         formdata() {
             let form = new FormData()
@@ -84,8 +87,7 @@ export default {
         async update() {
             openLoading()
             updateUser(this.formdata()).then((res) => {
-                storeUser('user', res.data.user)
-                cache.add(this.$hostname + '/images/' + user.dp)
+                caches.add(this.$hostname + '/images/' + res.data.user.dp)
                 this.checkChanges()
                 showError(res)
 
@@ -102,22 +104,21 @@ export default {
         },
       
     },
-    async mounted() {
+    mounted() {
         this.checkChanges()
         openLoading()
+        const t_his = this
         getLoggedInUser()
-            .then((res) => {
-                this.user = res.data.user
-                this.oldUser.email = res.data.user.email
-                this.oldUser.username = res.data.user.username
-
-                storeUser('user', res.data.user)
-                dismiss()
-            })
-            .catch((error) => {
-                dismiss()
-                showError(error)
-            })
+        .then((res) => {
+            t_his.user = res.user
+            t_his.oldUser = res.user
+            console.log("Olduser", res.user.ponts)
+            dismiss()
+        })
+        .catch((error) => {
+            dismiss()
+            showError(error)
+        })
     }
 };
 </script>

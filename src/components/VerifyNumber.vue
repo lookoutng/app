@@ -43,10 +43,10 @@ export default {
     methods: {
         async login() {
             openLoading()
-            createUser(this.tel).then((res) => {
-                    console.log("user login", res.data)
-                    location.replace('/register')
-                })
+            createUser(this.tel)
+            .then(() => {
+                location.replace('/register')
+            })
         },
         verify() {
             const code = this.code;

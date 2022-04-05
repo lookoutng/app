@@ -7,7 +7,6 @@
 
 <script>
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import { storeUser } from '@/functions/storage'
 import { openToast } from '@/functions/widget'
 import { isLoggedIn } from '@/functions/login'
 import { getLoggedInUser, createLocation } from '@/services/user'
@@ -62,11 +61,7 @@ export default {
                         console.log(error)
                     }
                 )
-
                 getLoggedInUser()
-                .then((res) => {
-                    storeUser(res)
-                })
             }
 
     },

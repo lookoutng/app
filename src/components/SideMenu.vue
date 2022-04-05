@@ -5,7 +5,7 @@
 
           <div class="df alm ion-padding">
               <ion-thumbnail>
-                <!-- <img :src=" user.dp ? this.$hostname+'/images/' + this.user.dp : ''" class=""/> -->
+                <img :src=" user.dp ? this.$hostname+'/images/' + this.user.dp : ''" class=""/>
               </ion-thumbnail>
               <div class="ion-padding">
                 <ion-label class="century ion-padding-end ion-text-wrap ion-text-sm" style="font-size:80%;">
@@ -21,6 +21,7 @@
     <ion-content>
       <ion-list class="ion-no-padding century" no-padding>
 
+          <ion-item lines="full" href="/profile">Profile</ion-item>
           <ion-item lines="full">About</ion-item>
           <ion-item lines="full">Support</ion-item>
           <ion-item lines="full" @click="logout">Logout</ion-item>
