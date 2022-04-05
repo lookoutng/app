@@ -2,4 +2,5 @@ workflows:
   lokout-ios:
     name: Look Out Ios Build
     scripts:
-        -ionic capacitor build ios
+        - name: "Ionic Ios Build"
+          script: ionic capacitor build ios
