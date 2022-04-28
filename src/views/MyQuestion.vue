@@ -43,23 +43,9 @@
 </template>
 
 <script>
-import {
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonList,
-    IonItem,
-    IonText,
-    IonBadge,
-   
-} from '@ionic/vue'
-import axios from 'axios'
-import {
-    dismiss,
-    Get,
-    openLoading,
-    openToast
-} from '../storage'
+import { IonContent, IonHeader, IonPage, IonList, IonItem, IonText, IonBadge} from '@ionic/vue'
+import { openLoading, openToast } from '@/functions/widget'
+import { getUserQuestion } from '@/services/question'
 
 export default {
     name: 'MyQuestion',
@@ -79,23 +65,15 @@ export default {
     },
     async ionViewDidEnter() {
         openLoading()
-        const token = await Get('token')
-        axios.get(this.$hostname + '/api/question/user/default', {
-                headers: {
-                    "Authorization": "Bearer " + token
-                }
-            })
-            .then((res) => {
-                console.log(res.data.question)
+        getUserQuestion()
+        .then((res) => 
+            {
                 this.myquestions = res.data.question
-                dismiss()
-
-            })
-            .catch((error) => {
-                console.error(error)
-                openToast(error.message)
-                dismiss()
-            })
+            }
+        )
+        .catch((error) => {
+            openToast(error.message)
+        })
     },
     
 };

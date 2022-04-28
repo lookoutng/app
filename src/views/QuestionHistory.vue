@@ -15,7 +15,7 @@
     <ion-content class="ion-padding-bottom">
 
         <ion-item class="no-line ion-margin-top century" style="overflow:unset !important">
-            <ion-range min="1" max="30" v-model="range" step="1" style="" pin="true" @ionBlur="getRanged">
+            <ion-range min="1" max="30" v-model="range" step="1" style="" pin="true" @ionBlur="getQuestionsByRange">
                 <ion-label slot="start">km</ion-label>
                 <ion-label slot="end">30km</ion-label>
             </ion-range>
@@ -81,32 +81,12 @@
 </template>
 
 <script>
-import {
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonItem,
-    IonRange,
-    IonTabButton,
-    IonTabBar,
-    IonInput,
-    IonThumbnail,
-    IonText,
-} from '@ionic/vue'
-import {
-    VueCollapsiblePanelGroup,
-    VueCollapsiblePanel,
-} from '@dafcoe/vue-collapsible-panel'
-import {
-    dismiss,
-    Get,
-    openLoading,
-    showError,
-} from '../storage'
-import axios from 'axios'
-import {
-    Geolocation
-} from '@capacitor/geolocation';
+import { IonContent, IonHeader, IonPage, IonItem, IonRange, IonTabButton, IonTabBar, IonInput, IonThumbnail, IonText } from '@ionic/vue'
+import { VueCollapsiblePanelGroup, VueCollapsiblePanel } from '@dafcoe/vue-collapsible-panel'
+import { openLoading } from '@/functions/widget'
+import { Geolocation } from '@capacitor/geolocation';
+import { createAnswer } from '@/services/answer';
+import { getQuestions } from '@/services/question';
 
 export default {
     name: 'QuestionHistory',
@@ -134,26 +114,15 @@ export default {
     methods: {
         open(id) {
 
-            var open = document.getElementsByClassName('ion-item')
+            let open = document.getElementsByClassName('ion-item')
             open.forEach(element => {
                 element.classList.remove("ion-item")
             });
             document.getElementById('question' + id).classList.add("ion-item");
-
-            console.log(this.range)
         },
         async send($question_id) {
-            const token = await Get('token')
-
             const ref = 'answer' + $question_id
-            axios.post(this.$hostname + '/api/answer/create/question/' + $question_id, {
-                    body: document.getElementById(ref).value,
-                }, {
-                    headers: {
-                        "Authorization": 'Bearer ' + token,
-                        "Accept": 'application/json'
-                    },
-                })
+            createAnswer($question_id, document.getElementById(ref).value)
                 .then(() => {
                     for (const key in this.questions) {
                         if (this.questions[key].id == $question_id) {
@@ -165,74 +134,21 @@ export default {
                     console.error(error)
                 })
         },
-        async getRanged(){
+        async getQuestionsByRange(){
             openLoading()
-
-            const token = await Get('token')
-            const coordinates = await Geolocation.getCurrentPosition();
-            
+            const coordinates = await Geolocation.getCurrentPosition()
             const lat = coordinates.coords.latitude
             const long = coordinates.coords.longitude
 
-            axios.get(this.$hostname + '/api/questions', {
-                    headers: {
-                        "Authorization": 'Bearer ' + token,
-                        "Accept": 'application/json'
-                    },
-                    params: {
-                        lat: lat,
-                        long: long,
-                        range: this.range
-                    }
-                })
+            getQuestions(lat, long)
                 .then((res) => {
                     this.questions = res.data.questions
-                    console.log(this.questions)
-                    dismiss()
                 })
-                .catch((error) => {
-                    console.log(error)
-                    showError(error)
-                    dismiss()
-                })
-
-            console.log(this.range)
         }
     },
     async ionViewDidEnter() {
         openLoading()
-
-     
-        const token = await Get('token')
-        const coordinates = await Geolocation.getCurrentPosition();
-        
-        const lat = coordinates.coords.latitude
-        const long = coordinates.coords.longitude
-
-        axios.get(this.$hostname + '/api/questions', {
-                headers: {
-                    "Authorization": 'Bearer ' + token,
-                    "Accept": 'application/json'
-                },
-                params: {
-                    lat: lat,
-                    long: long,
-                    range: this.range
-                }
-            })
-            .then((res) => {
-                this.questions = res.data.questions
-                console.log(this.questions)
-                dismiss()
-            })
-            .catch((error) => {
-                console.log(error)
-                showError(error)
-                dismiss()
-            })
-    },
-    setup() {
-
+        this.getQuestionsByRange()
     }
 };
 </script>

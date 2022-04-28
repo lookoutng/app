@@ -1,0 +1,29 @@
+{
+	"appId": "com.look.out",
+	"appName": "LookOut",
+	"webDir": "dist",
+	"bundledWebRuntime": false,
+	"plugins": {
+		"FirebaseAuthentication": {
+			"skipNativeAuth": false,
+			"providers": [
+				"phone"
+			]
+		},
+		"PushNotifications": {
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		},
+		"BluetoothLe": {
+			"displayStrings": {
+				"scanning": "Am Scannen...",
+				"cancel": "Abbrechen",
+				"availableDevices": "Verfügbare Geräte",
+				"noDeviceFound": "Kein Gerät gefunden"
+			}
+		}
+	}
+}

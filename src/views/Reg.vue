@@ -17,7 +17,7 @@ import {
     IonPage,
     IonText,
 } from '@ionic/vue'
-import Register from './Layouts/Register.vue'
+import Register from '@/components/Register.vue'
 
 export default {
     name: 'Reg',

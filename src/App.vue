@@ -1,101 +1,68 @@
 <template>
     <ion-app>
         <ion-router-outlet />
+        <side-menu />
     </ion-app>
 </template>
 
 <script>
-import {
-    IonApp,
-    IonRouterOutlet,
-    onIonViewDidEnter,
-} from '@ionic/vue';
-import {
-    isLoggedIn,
-    storeUser,
-    Get,
-    openToast
-} from './storage'
-import axios from 'axios'
-import {
-    Geolocation
-} from '@capacitor/geolocation';
-// import { OpenNativeSettings } from 'cordova-open-native-settings';
-// import Cordova from 'cordova';
-import { NativeSettings } from 'capacitor-native-settings';
-
-// import {
-// //   ActionPerformed,
-// //   PushNotificationSchema,
-//   PushNotifications,
-// //   Token,
-// } from '@capacitor/push-notifications'
+import { IonApp, IonRouterOutlet } from '@ionic/vue';
+import { openToast } from '@/functions/widget'
+import { isLoggedIn } from '@/functions/login'
+import { getLoggedInUser, createLocation } from '@/services/user'
+import { Geolocation } from '@capacitor/geolocation';
+import SideMenu from '@/components/SideMenu.vue';
+// import { NativeSettings } from 'capacitor-native-settings';
+// import { getMessaging } from "firebase/messaging";
+// import { ActionPerformed, PushNotificationSchema, PushNotifications, Token } from '@capacitor/push-notifications'
 
 export default {
     name: 'App',
     components: {
         IonApp,
         IonRouterOutlet,
+        SideMenu
     },
     async created() {
+        // alert(await getMessaging().getToken({vapidKey: 'BFYu3NoIbmPGNi5ey1f4PmMrp8ATm1FwpuL8brwJzhnqvw817gay89G80lmgNeurtIEerFXqfVcFUtzHgase1uU'}))
+        // console.log("goo" + await NativeSettings.openAndroid({
+        //   option: "location",
+        // }))
         isLoggedIn()
-        // let islocationEnabled
-        const token = await Get('token');
-        console.log("goo" + await NativeSettings.openAndroid({
-          option: "location",
-        }))
+        const token = localStorage.getItem('token')
+            if (token) {
+                console.log("token",token)
+                let coordinates
+                Geolocation.getCurrentPosition()
+                .then((coord) => {
+                    coordinates = coord
+                })
+                .catch((e)=>{
+                    console.log(e.message)
+                    if(e.code == 1 || e.message == "location disabled"){
+                        console.log("Not Working")
+                        openToast("Application can't work without location, Kindly turn On..App closing in 3 sec",10000)
+                        // setTimeout(() => {navigator['app'].exitApp()}, 4000)
+                    }
+                });
+                console.log(coordinates)
+                const lat = coordinates.coords.latitude, long = coordinates.coords.longitude;
 
-        if (token) {
-            const coordinates = await Geolocation.getCurrentPosition().catch((e)=>{
-                console.log(e.message)
-                if(e.code == 1 || e.message == "location disabled"){
-                    console.log("Not Working")
-                    openToast("Application can't work without location, Kindly turn On..App closing in 3 sec",10000)
-                    // setTimeout(() => {navigator['app'].exitApp()}, 4000)
-                }
-            });
-            console.log(coordinates)
-           
-            axios.post(this.$hostname + '/api/location/create', {
-                lat: coordinates.coords.latitude,
-                long: coordinates.coords.longitude,
-            }, {
-                headers: {
-                    "Authorization": "Bearer " + token
-                }
-            })
-            .then(() => {
-
-            })
-            .catch((error) => {
-                if(error.response.data.message == "unauthenticated")
-                {
-                    openToast("Issue with User Login")
-                    setTimeout(3000, function(){
-                        location.replace("/home")
-                    })
-                }
-                console.log(error)
-            })
-            axios.get(this.$hostname + '/api/user', {
-            headers: {
-                "Authorization": "Bearer " + token
+                createLocation(token, { lat, long })
+                .catch((error) => 
+                    {
+                        if(error.response.data.message == "unauthenticated")
+                        {
+                            openToast("Issue with User Login")
+                            setTimeout(3000, function(){
+                                location.replace("/home")
+                            })
+                        }
+                        console.log(error)
+                    }
+                )
+                getLoggedInUser()
             }
-            })
-            .then((res) => {
-                storeUser(res)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-            
-
-
-        }
-
-
-        onIonViewDidEnter(() => {
-        });
 
     },
     setup(){
